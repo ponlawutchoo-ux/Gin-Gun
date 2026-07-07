@@ -1,0 +1,2690 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gin-Gun | ระบบบริหารหารค่าใช้จ่ายกลุ่มเพื่อนเเละเคลียร์ยอด</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#f0fdf4',
+              100: '#dcfce7',
+              200: '#bbf7d0',
+              300: '#86efac',
+              400: '#4ade80',
+              500: '#22c55e',
+              600: '#16a34a',
+              700: '#15803d',
+              800: '#166534',
+              900: '#14532d',
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'Noto Sans Thai', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0b1329;
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(142, 70%, 15%, 0.4) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, hsla(222, 47%, 11%, 0.9) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, hsla(138, 60%, 12%, 0.3) 0px, transparent 50%);
+      min-height: 100vh;
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    .glass-card {
+      background: rgba(15, 23, 42, 0.45);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        0 2px 4px -1px rgba(0, 0, 0, 0.06),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05);
+      border-radius: 24px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(34, 197, 94, 0.25);
+      box-shadow: 
+        0 20px 25px -5px rgba(0, 0, 0, 0.25),
+        0 10px 10px -5px rgba(0, 0, 0, 0.15),
+        inset 0 1px 1px rgba(255, 255, 255, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .neumorphic-input {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 0 rgba(255, 255, 255, 0.05);
+      color: #f8fafc;
+      transition: all 0.2s ease;
+    }
+
+    .neumorphic-input:focus {
+      border-color: #22c55e;
+      box-shadow: 
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 0 0 3px rgba(34, 197, 94, 0.2);
+      outline: none;
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(15, 23, 42, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(34, 197, 94, 0.4);
+    }
+
+    .payer-radio:checked + label {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.12);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+      transform: scale(1.02);
+    }
+
+    .participant-checkbox:checked + label {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.12);
+      box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+      transform: scale(1.02);
+    }
+
+    .cat-radio:checked + label {
+      border-color: #22c55e;
+      background-color: rgba(34, 197, 94, 0.15);
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.2);
+      transform: translateY(-2px);
+    }
+
+    .chat-bubble-me {
+      background: linear-gradient(135deg, #16a34a 0%, #059669 100%);
+      box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
+      border-radius: 18px 18px 2px 18px;
+    }
+
+    .chat-bubble-other {
+      background: rgba(30, 41, 59, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      border-radius: 18px 18px 18px 2px;
+    }
+
+    .glow-dot-green {
+      box-shadow: 0 0 8px #22c55e;
+    }
+    .glow-dot-red {
+      box-shadow: 0 0 8px #ef4444;
+    }
+    .glow-dot-amber {
+      box-shadow: 0 0 8px #f59e0b;
+    }
+
+    .tab-active {
+      background: rgba(34, 197, 94, 0.15);
+      border-color: rgba(34, 197, 94, 0.4);
+      color: #4ade80;
+      box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
+    }
+  </style>
+</head>
+<body class="font-sans text-slate-200 antialiased py-6 px-4 sm:px-6 lg:px-8">
+
+  <div class="max-w-5xl mx-auto space-y-6">
+
+    <header class="flex flex-col sm:flex-row items-center justify-between gap-4 p-6 glass-card">
+      <div class="flex items-center gap-3.5">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-emerald-900/40 relative overflow-hidden">
+          <i data-lucide="wallet-2" class="w-7 h-7 relative z-10"></i>
+          <span class="absolute inset-0 bg-white/10 transform rotate-45 translate-y-4"></span>
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold bg-gradient-to-r from-brand-400 via-emerald-300 to-teal-400 bg-clip-text text-transparent tracking-tight">Gin-Gun (กินกัน)</h1>
+          <p class="text-xs sm:text-sm text-slate-400 font-medium">แบ่งปันค่าข้าวกลุ่มเพื่อน จัดการยอดค้างชำระ แชทบอกกล่าว และกำหนดการจ่ายเงิน</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-3 flex-wrap">
+
+        <div id="user-profile-widget" class="hidden flex items-center gap-2.5 bg-slate-900/60 border border-slate-800 p-1.5 pl-3 pr-2 rounded-xl text-xs font-bold text-slate-200 shadow-md">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          <span>ผู้ใช้: <span id="current-user-display" class="text-brand-400 font-extrabold">...</span></span>
+          <button type="button" id="btn-logout" class="p-1 px-2 rounded-lg bg-slate-800 hover:bg-rose-950/40 text-slate-400 hover:text-rose-400 transition" style="font-size: 10px;">
+            ออกจากระบบ
+          </button>
+        </div>
+
+        <button id="btn-toggle-config" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 rounded-xl transition duration-200 shadow-md">
+          <i data-lucide="settings" class="w-4 h-4 text-emerald-400"></i>
+          <span>ตั้งค่าระบบหลังบ้าน (API)</span>
+        </button>
+      </div>
+    </header>
+
+    <section id="config-panel" class="hidden p-6 glass-card border border-brand-500/20 relative z-[250]">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex items-center gap-2.5">
+          <i data-lucide="database" class="w-5 h-5 text-brand-400"></i>
+          <h2 class="text-lg font-bold text-white">เชื่อมต่อ Google Sheets & Apps Script</h2>
+        </div>
+        <button id="btn-close-config" class="text-slate-400 hover:text-slate-200">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label for="input-api-url" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Google Apps Script Web App URL</label>
+          <input type="url" id="input-api-url" placeholder="https://script.google.com/macros/s/.../exec" class="w-full px-4 py-3 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 text-sm font-mono transition duration-200 neumorphic-input">
+          <p class="mt-2 text-[10px] text-slate-400 font-semibold">* หากต้องการสลับกลับไปใช้โหมดทดสอบจำลอง (Offline/Mock Mode) ให้ลบลิงก์ในช่องนี้ออกให้หมด แล้วกดบันทึกการเชื่อมต่อ</p>
+        </div>
+
+        <div class="flex flex-wrap gap-2 pt-2">
+          <button id="btn-save-config" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl shadow-md transition duration-200 flex items-center gap-2">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>บันทึกการเชื่อมต่อ</span>
+          </button>
+          <button id="btn-test-connection" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 font-semibold text-sm rounded-xl shadow-sm transition duration-200 flex items-center gap-2">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>ทดสอบการเชื่อมต่อ</span>
+          </button>
+        </div>
+
+        <div class="mt-4 p-4 bg-slate-900/80 rounded-xl border border-slate-800 text-xs text-slate-400 space-y-2">
+          <p class="font-bold text-brand-400 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4"></i> คำแนะนำการเชื่อมต่อคอลัมน์เเยกรายคน:</p>
+          <ol class="list-decimal pl-4 space-y-1">
+            <li>เปิดสคริปต์เดิมของคุณ และนำโค้ดจาก <code>apps-script/code.gs</code> ไปวางทับ</li>
+            <li>กด Deploy เป็นการใช้งานเวอร์ชันใหม่ เลือก <strong>ทุกคน (Anyone)</strong> และคัดลอก URL</li>
+            <li>นำลิงก์มาวางด้านบน ระบบจะย้าย (Migrate) ข้อมูลเดิมในชีตของคุณเป็นคอลัมน์รายคนอัตโนมัติ!</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <div id="mock-banner" class="hidden p-4 rounded-xl bg-amber-950/40 border border-amber-500/20 text-amber-300 flex flex-col sm:flex-row items-center justify-between gap-3 shadow-md">
+      <div class="flex items-center gap-2.5 text-sm font-medium">
+        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 flex-shrink-0"></i>
+        <span>ขณะนี้แอปทำงานใน <strong>โหมดจำลองในเบราว์เซอร์ (Offline Demo)</strong> ยินดีต้อนรับการทดลองใช้งาน</span>
+      </div>
+      <button id="btn-setup-now" class="px-3.5 py-1.5 bg-amber-600 hover:bg-amber-500 text-white font-bold text-xs rounded-lg transition duration-150 shadow-sm shadow-amber-900/30">
+        เชื่อมต่อฐานข้อมูลคลาวด์
+      </button>
+    </div>
+
+    <nav class="flex p-1.5 bg-slate-900/90 rounded-2xl border border-slate-800/80 shadow-2xl relative">
+      <div class="grid grid-cols-5 w-full gap-1">
+        <button id="btn-tab-dashboard" class="tab-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl transition duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-400 hover:text-slate-200">
+          <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+          <span>สรุปยอดสุทธิ</span>
+        </button>
+        <button id="btn-tab-expenses" class="tab-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl transition duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-400 hover:text-slate-200">
+          <i data-lucide="receipt" class="w-4 h-4"></i>
+          <span>บันทึกบิล & ประวัติ</span>
+        </button>
+        <button id="btn-tab-chat" class="tab-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl transition duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-400 hover:text-slate-200 relative">
+          <i data-lucide="message-square" class="w-4 h-4"></i>
+          <span>ห้องแชท</span>
+          <span id="chat-badge" class="hidden absolute top-1.5 right-4 w-2 h-2 rounded-full bg-emerald-500 glow-dot-green"></span>
+        </button>
+        <button id="btn-tab-schedules" class="tab-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl transition duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-400 hover:text-slate-200">
+          <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+          <span>กำหนดการจ่าย</span>
+        </button>
+        <button id="btn-tab-transfer" class="tab-btn py-3 px-2 text-xs sm:text-sm font-bold rounded-xl transition duration-200 flex flex-col sm:flex-row items-center justify-center gap-2 text-slate-400 hover:text-slate-200 relative">
+          <i data-lucide="banknote" class="w-4 h-4"></i>
+          <span>แจ้งโอนเงิน</span>
+          <span id="transfer-badge" class="hidden absolute top-1 right-2 bg-rose-500 text-white font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center shadow-lg shadow-rose-950/40 glow-dot-red"></span>
+        </button>
+      </div>
+    </nav>
+
+    <main class="space-y-6">
+
+      <section id="tab-content-dashboard" class="tab-pane space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <div class="lg:col-span-7 p-6 glass-card">
+            <div class="flex items-center justify-between mb-6">
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="trending-up" class="w-5 h-5 text-emerald-400"></i>
+                <h2 class="text-lg font-bold text-white">ยอดคงเหลือสุทธิ (Net Balance)</h2>
+              </div>
+              <button id="btn-refresh" class="p-2 text-slate-400 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 rounded-xl transition duration-150 shadow-md" title="ดึงข้อมูลล่าสุด">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+              </button>
+            </div>
+
+            <div id="balances-container" class="space-y-4">
+
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 p-6 glass-card flex flex-col justify-between">
+            <div>
+              <div class="flex items-center gap-2.5 mb-6">
+                <i data-lucide="arrow-right-left" class="w-5 h-5 text-emerald-400"></i>
+                <h2 class="text-lg font-bold text-white">คำแนะนำการเคลียร์บิล (Settlements)</h2>
+              </div>
+              <div id="settlements-container" class="space-y-3">
+
+              </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-slate-800/60 text-xs text-slate-400 leading-relaxed">
+              <p><i data-lucide="info" class="w-3.5 h-3.5 inline mr-1 text-slate-400"></i> แนะนำวิธีการโอนเงินเคลียร์ยอดค้างจ่ายสะสมด้วยจำนวนครั้งที่น้อยที่สุดโดยใช้อัลกอริทึม Greedy Settlement</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="p-6 glass-card">
+          <div class="flex items-center gap-2.5 mb-6">
+            <i data-lucide="bar-chart-3" class="w-5 h-5 text-emerald-400"></i>
+            <h2 class="text-lg font-bold text-white">ตารางสรุปยอดค่าใช้จ่ายรวมสะสมทั้งหมด (Overall Expense Summary)</h2>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-6">
+            <div class="p-4 bg-slate-900/60 border border-slate-800 rounded-2xl flex flex-col justify-center">
+              <span class="text-xs text-slate-400 font-semibold mb-1">ยอดรวมกลุ่มทั้งหมด (Group Total Spent)</span>
+              <span id="summary-group-total" class="text-xl sm:text-2xl font-black text-emerald-400">0.00 บาท</span>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs sm:text-sm">
+              <thead>
+                <tr class="border-b border-slate-800/80 text-slate-400 font-bold uppercase tracking-wider">
+                  <th class="pb-3 pr-2">ชื่อเพื่อน</th>
+                  <th class="pb-3 px-2 text-right">ยอดสำรองจ่ายสะสม (Total Paid)</th>
+                  <th class="pb-3 px-2 text-right">ยอดที่กินสะสม (Total Consumed)</th>
+                  <th class="pb-3 px-2 text-right">ยอดเริ่มต้นเดิม (Initial)</th>
+                  <th class="pb-3 pl-2 text-right">ยอดดุลคงเหลือสุทธิ (Net Balance)</th>
+                </tr>
+              </thead>
+              <tbody id="summary-friends-container" class="divide-y divide-slate-800/40 text-slate-300 font-medium">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="p-6 glass-card">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="users-cog" class="w-5 h-5 text-emerald-400"></i>
+              <h2 class="text-lg font-bold text-white">รายชื่อเพื่อนในกลุ่ม</h2>
+            </div>
+            <button type="button" id="btn-add-friend" class="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-emerald-400 bg-emerald-950/30 border border-emerald-500/25 rounded-xl hover:bg-emerald-900/30 transition duration-150 shadow-sm">
+              <i data-lucide="user-plus" class="w-4 h-4"></i>
+              <span>เพิ่มคนใหม่</span>
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mb-4">คุณสามารถแก้ไขชื่อและตั้งค่ายอดคงค้างเริ่มต้นได้ (ยอดติดลบคือเริ่มต้นโดยเป็นหนี้ ยอดบวกคือเริ่มต้นโดยคนอื่นเป็นหนี้เรา)</p>
+
+          <form id="friends-form" class="space-y-4">
+            <div id="friends-list-container" class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-[300px] overflow-y-auto pr-1">
+
+            </div>
+            <button type="submit" id="btn-save-friends" class="w-full py-3 bg-emerald-600/90 hover:bg-emerald-500/90 text-white font-bold text-sm rounded-xl transition duration-150 flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/25">
+              <i data-lucide="save" class="w-4 h-4"></i>
+              <span>อัปเดตและเขียนตารางชีตใหม่ 💾</span>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="tab-content-expenses" class="tab-pane hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <div class="lg:col-span-5 p-6 glass-card">
+            <div class="flex items-center gap-2.5 mb-6">
+              <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i>
+              <h2 class="text-lg font-bold text-white">บันทึกบิลอาหารมื้อนี้</h2>
+            </div>
+
+            <form id="bill-form" class="space-y-5">
+
+              <div>
+                <label for="input-meal" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">รายการ / มื้ออาหาร</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                    <i data-lucide="utensils" class="w-4 h-4"></i>
+                  </span>
+                  <input type="text" id="input-meal" required placeholder="เช่น ส้มตำรสแซ่บ, มื้อเย็นริมน้ำ" class="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none text-sm font-medium transition duration-200 neumorphic-input">
+                </div>
+              </div>
+
+              <div>
+                <label for="input-amount" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">จำนวนเงินรวม (บาท)</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-emerald-400 font-bold text-sm">฿</span>
+                  <input type="number" id="input-amount" required min="0.01" step="0.01" placeholder="0.00" class="w-full pl-10 pr-16 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+                  <span class="absolute inset-y-0 right-0 pr-4 flex items-center text-slate-500 font-bold text-xs">THB</span>
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">หมวดหมู่ค่าใช้จ่าย</label>
+                <div class="grid grid-cols-5 gap-2">
+                  <div>
+                    <input type="radio" name="category" id="cat-food" value="Food" checked class="hidden cat-radio">
+                    <label for="cat-food" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer transition duration-150 text-center">
+                      <span class="text-xl mb-0.5">🍔</span>
+                      <span class="text-[10px] font-bold text-slate-300">อาหาร</span>
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="category" id="cat-drinks" value="Drinks" class="hidden cat-radio">
+                    <label for="cat-drinks" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer transition duration-150 text-center">
+                      <span class="text-xl mb-0.5">🍹</span>
+                      <span class="text-[10px] font-bold text-slate-300">เครื่องดื่ม</span>
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="category" id="cat-dessert" value="Dessert" class="hidden cat-radio">
+                    <label for="cat-dessert" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer transition duration-150 text-center">
+                      <span class="text-xl mb-0.5">🍰</span>
+                      <span class="text-[10px] font-bold text-slate-300">ของหวาน</span>
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="category" id="cat-travel" value="Travel" class="hidden cat-radio">
+                    <label for="cat-travel" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer transition duration-150 text-center">
+                      <span class="text-xl mb-0.5">🚗</span>
+                      <span class="text-[10px] font-bold text-slate-300">เดินทาง</span>
+                    </label>
+                  </div>
+                  <div>
+                    <input type="radio" name="category" id="cat-others" value="Others" class="hidden cat-radio">
+                    <label for="cat-others" class="flex flex-col items-center justify-center p-2 rounded-xl border border-slate-800 bg-slate-900/60 hover:bg-slate-800/80 cursor-pointer transition duration-150 text-center">
+                      <span class="text-xl mb-0.5">🛍️</span>
+                      <span class="text-[10px] font-bold text-slate-300">อื่นๆ</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label for="input-duedate" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">กำหนดชำระเงิน (Due Date) - ไม่บังคับ</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-slate-500">
+                    <i data-lucide="calendar" class="w-4 h-4"></i>
+                  </span>
+                  <input type="date" id="input-duedate" class="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none text-sm font-medium transition duration-200 neumorphic-input">
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">คนออกเงินล่วงหน้า (Payer)</label>
+                <div id="payer-container" class="grid grid-cols-3 gap-2">
+
+                </div>
+              </div>
+
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="block text-xs font-bold text-slate-400 uppercase tracking-wider">เพื่อนที่ร่วมหารค่าอาหาร</label>
+                  <button type="button" id="btn-toggle-all-participants" class="text-xs font-bold text-emerald-400 hover:text-emerald-300 transition">
+                    ยกเลิกทั้งหมด
+                  </button>
+                </div>
+                <div id="participants-container" class="grid grid-cols-3 gap-2">
+
+                </div>
+              </div>
+
+              <button type="submit" id="btn-submit-bill" class="w-full py-4 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40">
+                <i data-lucide="send" class="w-4 h-4"></i>
+                <span>บันทึกประวัติลง Google Sheets 🚀</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-7 p-6 glass-card">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+              <div class="flex items-center gap-2.5">
+                <i data-lucide="history" class="w-5 h-5 text-emerald-400"></i>
+                <h2 class="text-lg font-bold text-white">ประวัติค่าใช้จ่ายล่าสุด</h2>
+              </div>
+
+              <select id="select-category-filter" class="px-3 py-1.5 bg-slate-800 text-slate-200 border border-slate-700/80 rounded-xl text-xs font-bold focus:outline-none focus:border-brand-500">
+                <option value="All">ทุกหมวดหมู่</option>
+                <option value="Food">🍔 อาหาร</option>
+                <option value="Drinks">🍹 เครื่องดื่ม</option>
+                <option value="Dessert">🍰 ของหวาน</option>
+                <option value="Travel">🚗 เดินทาง</option>
+                <option value="Others">🛍️ อื่นๆ</option>
+              </select>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-sm">
+                <thead>
+                  <tr class="border-b border-slate-800/80 text-slate-400 font-bold text-xs uppercase tracking-wider">
+                    <th class="pb-3 pr-2">รายการ / หมวดหมู่ / วันที่</th>
+                    <th class="pb-3 px-2">คนจ่าย</th>
+                    <th class="pb-3 px-2">ผู้ร่วมหาร</th>
+                    <th class="pb-3 pl-2 text-right">ยอดรวม (บาท)</th>
+                  </tr>
+                </thead>
+                <tbody id="history-container" class="divide-y divide-slate-800/40 text-slate-300 font-medium">
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-content-chat" class="tab-pane hidden glass-card p-6">
+        <div class="flex flex-col h-[550px]">
+
+          <div class="flex items-center justify-between pb-4 border-b border-slate-800/80 mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="w-10 h-10 rounded-xl bg-emerald-950/50 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <i data-lucide="message-square" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h2 class="text-base font-bold text-white">ห้องพูดคุยในกลุ่มเพื่อน (Chat Group)</h2>
+                <p class="text-[10px] text-slate-400 font-medium flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block glow-dot-green"></span>บันทึกเก็บข้อมูลในแท็บ Chat ของ Google Sheets</p>
+              </div>
+            </div>
+
+            <div id="role-select-container" class="flex items-center gap-2 bg-slate-900/60 border border-slate-800 px-3 py-1.5 rounded-xl">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wide">สวมบทบาท:</span>
+              <select id="chat-sender-select" class="bg-transparent text-xs font-bold text-emerald-400 focus:outline-none cursor-pointer">
+
+              </select>
+            </div>
+          </div>
+
+          <div id="chat-messages-container" class="flex-1 overflow-y-auto space-y-4 pr-2 mb-4">
+
+          </div>
+
+          <form id="chat-form" class="flex items-center gap-2 pt-3 border-t border-slate-800/80 flex-wrap sm:flex-nowrap">
+
+            <label for="chat-attach-file" class="p-3 bg-slate-900 border border-slate-800 hover:bg-slate-800 text-slate-400 hover:text-slate-200 rounded-xl cursor-pointer transition flex items-center justify-center" title="แนบรูปสลิป / หลักฐานการโอน">
+              <i data-lucide="image" class="w-5 h-5"></i>
+              <input type="file" id="chat-attach-file" accept="image/*" class="hidden">
+            </label>
+
+            <div class="flex-1 min-w-[200px] relative">
+              <input type="text" id="chat-input" required placeholder="พิมพ์ข้อความคุยกับเพื่อน หรือเเจ้งโอนเเนบรูปตรงนี้..." class="w-full px-4 py-3.5 rounded-xl focus:outline-none text-sm neumorphic-input">
+
+              <div id="chat-preview-container" class="hidden absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5 bg-slate-950/85 p-1 pr-2 rounded-lg border border-slate-800">
+                <img id="chat-preview-img" src="" class="w-6 h-6 object-contain rounded">
+                <button type="button" id="btn-chat-preview-remove" class="text-rose-400 hover:text-rose-300">
+                  <i data-lucide="x" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <button type="submit" class="px-5 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-xl transition duration-150 flex items-center justify-center shadow-lg shadow-emerald-950/30">
+              <i data-lucide="send" class="w-5 h-5"></i>
+            </button>
+          </form>
+        </div>
+      </section>
+
+      <section id="tab-content-schedules" class="tab-pane hidden space-y-6">
+        <div class="glass-card p-6">
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2.5">
+              <i data-lucide="calendar-clock" class="w-5 h-5 text-emerald-400"></i>
+              <h2 class="text-lg font-bold text-white">ตารางกำหนดชำระเงินสะสม (Payment Schedules)</h2>
+            </div>
+
+            <div class="flex gap-2">
+              <button id="btn-schedule-filter-all" class="schedule-filter-btn px-3 py-1.5 text-xs font-bold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 rounded-xl transition active">ทั้งหมด</button>
+              <button id="btn-schedule-filter-pending" class="schedule-filter-btn px-3 py-1.5 text-xs font-bold bg-slate-900/60 text-slate-400 hover:text-slate-200 border border-slate-800 rounded-xl transition">ค้างชำระ</button>
+            </div>
+          </div>
+
+          <div id="schedules-list" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          </div>
+        </div>
+      </section>
+
+      <section id="tab-content-transfer" class="tab-pane hidden space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+          <div class="lg:col-span-5 p-6 glass-card self-start">
+            <div class="flex items-center gap-2.5 mb-6">
+              <div class="w-10 h-10 rounded-xl bg-emerald-950/50 border border-emerald-500/20 flex items-center justify-center text-emerald-400">
+                <i data-lucide="send" class="w-5 h-5"></i>
+              </div>
+              <div>
+                <h2 class="text-base font-bold text-white">แจ้งหลักฐานการโอนเงินชำระหนี้</h2>
+                <p class="text-[10px] text-slate-400 font-medium">แจ้งโอนชำระยอดค้างสะสมไปยังเพื่อน</p>
+              </div>
+            </div>
+
+            <form id="transfer-form" class="space-y-4">
+              <div>
+                <label for="transfer-from" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ผู้โอนเงิน (จาก)</label>
+                <select id="transfer-from" class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 bg-slate-900 border border-slate-800 text-white">
+
+                </select>
+              </div>
+
+              <div>
+                <label for="transfer-to" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ผู้รับเงิน (ถึง)</label>
+                <select id="transfer-to" class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 bg-slate-900 border border-slate-800 text-white">
+
+                </select>
+              </div>
+
+              <div>
+                <label for="transfer-amount" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">จำนวนเงินโอน (บาท)</label>
+                <div class="relative">
+                  <span class="absolute inset-y-0 left-0 pl-3.5 flex items-center text-emerald-400 font-bold text-sm">฿</span>
+                  <input type="number" id="transfer-amount" required step="0.01" min="0.01" placeholder="0.00" class="w-full pl-10 pr-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+                </div>
+              </div>
+
+              <div>
+                <label for="transfer-slip" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">อัปโหลดสลิปหลักฐานการโอนเงิน</label>
+                <input type="file" id="transfer-slip" accept="image/*" required class="w-full text-xs text-slate-400 file:mr-4 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-slate-800 file:text-slate-200 hover:file:bg-slate-700 cursor-pointer">
+
+                <div id="slip-preview-container" class="hidden mt-3 p-2 bg-slate-900 border border-slate-800 rounded-xl relative overflow-hidden h-40">
+                  <img id="slip-preview" src="" class="w-full h-full object-contain">
+                </div>
+              </div>
+
+              <button type="submit" id="btn-submit-transfer" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition duration-200 flex items-center justify-center gap-2 shadow-lg shadow-emerald-950/40">
+                <i data-lucide="check" class="w-4 h-4"></i>
+                <span>ส่งหลักฐานแจ้งโอนเงิน 🚀</span>
+              </button>
+            </form>
+          </div>
+
+          <div class="lg:col-span-7 space-y-6">
+
+            <div id="pending-receipts-card" class="p-6 glass-card hidden">
+              <div class="flex items-center gap-2.5 mb-6">
+                <i data-lucide="check-square" class="w-5 h-5 text-amber-400"></i>
+                <h2 class="text-lg font-bold text-white">รายการแจ้งโอนรอยืนยันการรับเงิน (Pending Receipts)</h2>
+              </div>
+              <div id="pending-receipts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              </div>
+            </div>
+
+            <div class="p-6 glass-card">
+              <div class="flex items-center gap-2.5 mb-6">
+                <i data-lucide="history" class="w-5 h-5 text-emerald-400"></i>
+                <h2 class="text-lg font-bold text-white">ประวัติการโอนเงินชำระหนี้ (Transfer History)</h2>
+              </div>
+
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                  <thead>
+                    <tr class="border-b border-slate-800/80 text-slate-400 font-bold text-xs uppercase tracking-wider">
+                      <th class="pb-3 pr-2">รายการโอนเงิน</th>
+                      <th class="pb-3 px-2 text-center">สลิป</th>
+                      <th class="pb-3 px-2 text-center">สถานะ</th>
+                      <th class="pb-3 pl-2 text-right">ยอดเงิน (บาท)</th>
+                    </tr>
+                  </thead>
+                  <tbody id="transfer-history-container" class="divide-y divide-slate-800/40 text-slate-300 font-medium">
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 max-w-sm w-full"></div>
+
+  <div id="modal-view-slip" class="fixed inset-0 z-50 flex items-center justify-center hidden p-4 bg-slate-950/80 backdrop-blur-sm" style="z-index: 100;">
+    <div class="w-full max-w-md p-6 glass-card border border-brand-500/20 shadow-2xl relative">
+      <button id="btn-close-slip-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-200">
+        <i data-lucide="x" class="w-5 h-5"></i>
+      </button>
+
+      <h3 id="slip-title" class="text-sm font-extrabold text-white mb-4">หลักฐานสลิปการโอนเงิน</h3>
+
+      <div class="bg-slate-950 border border-slate-900 rounded-xl overflow-hidden min-h-60 max-h-96 flex items-center justify-center">
+        <img id="slip-image-viewer" src="" class="w-full max-h-96 object-contain">
+      </div>
+    </div>
+  </div>
+
+  <div id="auth-overlay" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/95 backdrop-blur-md transition-all duration-300 animate-fade-in" style="z-index: 200;">
+    <div class="w-full max-w-md p-8 glass-card border border-brand-500/25 shadow-2xl relative">
+
+      <div class="flex flex-col items-center mb-8">
+        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-brand-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-950/50 mb-3 overflow-hidden">
+          <i data-lucide="wallet-2" class="w-7 h-7 text-white"></i>
+        </div>
+        <h1 class="text-2xl font-extrabold text-white tracking-tight">Gin-Gun <span class="text-emerald-400">กินกัน</span></h1>
+        <p class="text-xs text-slate-400 mt-1 font-semibold">แอปหารค่าข้าวและบริการจัดการหนี้กลุ่มเพื่อน</p>
+      </div>
+
+      <form id="login-form" class="space-y-4">
+        <h2 class="text-base font-bold text-white mb-2 border-b border-slate-800 pb-2">🔑 เข้าสู่ระบบใช้งาน</h2>
+        <div>
+          <label for="login-username" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ชื่อผู้ใช้งาน (Username)</label>
+          <input type="text" id="login-username" placeholder="ระบุ username ของคุณ" required class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+        </div>
+        <div>
+          <label for="login-password" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">รหัสผ่าน (Password)</label>
+          <input type="password" id="login-password" placeholder="ระบุรหัสผ่าน" required class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+        </div>
+        <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl transition duration-200 shadow-lg shadow-brand-950/40 flex items-center justify-center gap-2">
+          <span>เข้าสู่ระบบ 🔑</span>
+        </button>
+        <div class="text-center text-xs text-slate-400 font-semibold mt-4">
+          ยังไม่มีบัญชีกลุ่ม? <a href="#" id="link-show-register" class="text-brand-400 hover:underline">สมัครสมาชิกที่นี่</a>
+        </div>
+
+        <div class="mt-5 p-3.5 bg-emerald-950/15 border border-emerald-500/20 rounded-xl text-xs text-emerald-300 shadow-inner">
+          <p class="font-bold mb-1.5 flex items-center gap-1.5"><i data-lucide="info" class="w-4 h-4 text-emerald-400"></i> บัญชีทดลองสำหรับโหมดออฟไลน์ (Demo):</p>
+          <ul class="space-y-1 pl-1">
+            <li>• Username: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">a</code> / Password: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">a</code> (นาย A)</li>
+            <li>• Username: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">b</code> / Password: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">b</code> (นาย B)</li>
+            <li>• Username: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">c</code> / Password: <code class="font-mono bg-slate-900/60 px-1.5 py-0.5 rounded text-white border border-slate-800">c</code> (นาย C)</li>
+          </ul>
+        </div>
+      </form>
+
+      <form id="register-form" class="space-y-4 hidden">
+        <h2 class="text-base font-bold text-white mb-2 border-b border-slate-800 pb-2">📝 สมัครสมาชิกใหม่</h2>
+        <div>
+          <label for="reg-username" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">ชื่อผู้ใช้งาน (Username)</label>
+          <input type="text" id="reg-username" placeholder="ตั้งชื่อ username ใหม่" required class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+        </div>
+        <div>
+          <label for="reg-password" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">รหัสผ่าน (Password)</label>
+          <input type="password" id="reg-password" placeholder="ตั้งรหัสผ่าน" required class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input">
+        </div>
+        <div>
+          <label for="reg-friend-select" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">เชื่อมโยงบัญชีกับรายชื่อเพื่อน</label>
+          <select id="reg-friend-select" class="w-full px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 bg-slate-900 border border-slate-800 text-white">
+
+          </select>
+          <input type="text" id="reg-new-friend-name" placeholder="ระบุชื่อเพื่อนคนใหม่หากไม่มีในกลุ่ม..." class="w-full mt-2 px-4 py-3 rounded-xl focus:outline-none text-sm font-semibold transition duration-200 neumorphic-input hidden">
+        </div>
+        <button type="submit" id="btn-register-submit" class="w-full py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-xl transition duration-200 shadow-lg shadow-emerald-950/40 flex items-center justify-center gap-2">
+          <span>สมัครสมาชิกและเข้าใช้ ✅</span>
+        </button>
+        <div class="text-center text-xs text-slate-400 font-semibold mt-4">
+          มีบัญชีแล้ว? <a href="#" id="link-show-login" class="text-brand-400 hover:underline">กลับไปเข้าสู่ระบบ</a>
+        </div>
+      </form>
+
+      <div class="text-center text-xs text-slate-500 font-semibold mt-6 pt-4 border-t border-slate-800/60">
+        <button type="button" id="btn-auth-toggle-config" class="text-emerald-400 hover:text-emerald-300 hover:underline inline-flex items-center gap-1.5 transition">
+          <i data-lucide="settings" class="w-3.5 h-3.5"></i>
+          <span>ตั้งค่า API / สลับเป็นโหมดจำลอง (Offline)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+
+    function safeJsonParse(key, defaultValue) {
+      try {
+        const val = localStorage.getItem(key);
+        if (!val) return defaultValue;
+        return JSON.parse(val) || defaultValue;
+      } catch (e) {
+        return defaultValue;
+      }
+    }
+
+    function getMockUsers() {
+      const defaultMockUsers = [
+        { username: 'a', password: 'a', friendName: 'นาย A' },
+        { username: 'b', password: 'b', friendName: 'นาย B' },
+        { username: 'c', password: 'c', friendName: 'นาย C' }
+      ];
+      try {
+        const stored = localStorage.getItem('gingun_mock_users');
+        if (!stored) {
+          localStorage.setItem('gingun_mock_users', JSON.stringify(defaultMockUsers));
+          return defaultMockUsers;
+        }
+        const parsed = JSON.parse(stored);
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+          localStorage.setItem('gingun_mock_users', JSON.stringify(defaultMockUsers));
+          return defaultMockUsers;
+        }
+        defaultMockUsers.forEach(defU => {
+          const exists = parsed.some(u => u.username.toLowerCase() === defU.username.toLowerCase());
+          if (!exists) {
+            parsed.push(defU);
+          }
+        });
+        localStorage.setItem('gingun_mock_users', JSON.stringify(parsed));
+        return parsed;
+      } catch (e) {
+        localStorage.setItem('gingun_mock_users', JSON.stringify(defaultMockUsers));
+        return defaultMockUsers;
+      }
+    }
+
+    const state = {
+      apiUrl: localStorage.getItem('gingun_api_url') || '',
+      isMockMode: !localStorage.getItem('gingun_api_url'),
+      currentUser: safeJsonParse('gingun_logged_user', null),
+      friends: safeJsonParse('gingun_friends', [
+        { name: 'นาย A', initial: 0 },
+        { name: 'นาย B', initial: 0 },
+        { name: 'นาย C', initial: 0 }
+      ]),
+      balances: [],
+      history: [],
+      chat: safeJsonParse('gingun_chat', [
+        { timestamp: new Date(Date.now() - 3600000 * 2).toISOString(), sender: 'นาย A', message: 'มื้อเย็นกินชาบูกันดีไหม?' },
+        { timestamp: new Date(Date.now() - 3600000).toISOString(), sender: 'นาย B', message: 'ดีเลยๆ ขอจัดเต็มนะมื้อนี้' }
+      ]),
+      isLoading: false,
+      activeTab: 'dashboard',
+      scheduleFilter: 'all'
+    };
+
+    const elements = {
+      configPanel: document.getElementById('config-panel'),
+      btnToggleConfig: document.getElementById('btn-toggle-config'),
+      btnCloseConfig: document.getElementById('btn-close-config'),
+      inputApiUrl: document.getElementById('input-api-url'),
+      btnSaveConfig: document.getElementById('btn-save-config'),
+      btnTestConnection: document.getElementById('btn-test-connection'),
+      mockBanner: document.getElementById('mock-banner'),
+      btnSetupNow: document.getElementById('btn-setup-now'),
+
+      billForm: document.getElementById('bill-form'),
+      btnSubmitBill: document.getElementById('btn-submit-bill'),
+      btnToggleAllParticipants: document.getElementById('btn-toggle-all-participants'),
+      payerContainer: document.getElementById('payer-container'),
+      participantsContainer: document.getElementById('participants-container'),
+
+      friendsForm: document.getElementById('friends-form'),
+      friendsListContainer: document.getElementById('friends-list-container'),
+      btnAddFriend: document.getElementById('btn-add-friend'),
+
+      balancesContainer: document.getElementById('balances-container'),
+      settlementsContainer: document.getElementById('settlements-container'),
+      historyContainer: document.getElementById('history-container'),
+      btnRefresh: document.getElementById('btn-refresh'),
+      toastContainer: document.getElementById('toast-container'),
+
+      tabs: {
+        dashboard: document.getElementById('btn-tab-dashboard'),
+        expenses: document.getElementById('btn-tab-expenses'),
+        chat: document.getElementById('btn-tab-chat'),
+        schedules: document.getElementById('btn-tab-schedules'),
+        transfer: document.getElementById('btn-tab-transfer')
+      },
+      contentPanes: {
+        dashboard: document.getElementById('tab-content-dashboard'),
+        expenses: document.getElementById('tab-content-expenses'),
+        chat: document.getElementById('tab-content-chat'),
+        schedules: document.getElementById('tab-content-schedules'),
+        transfer: document.getElementById('tab-content-transfer')
+      },
+      chatBadge: document.getElementById('chat-badge'),
+      transferBadge: document.getElementById('transfer-badge'),
+      chatSenderSelect: document.getElementById('chat-sender-select'),
+      chatMessagesContainer: document.getElementById('chat-messages-container'),
+      chatForm: document.getElementById('chat-form'),
+      chatInput: document.getElementById('chat-input'),
+
+      categoryFilter: document.getElementById('select-category-filter'),
+
+      schedulesList: document.getElementById('schedules-list'),
+      btnScheduleFilterAll: document.getElementById('btn-schedule-filter-all'),
+      btnScheduleFilterPending: document.getElementById('btn-schedule-filter-pending'),
+
+      transferForm: document.getElementById('transfer-form'),
+      transferFrom: document.getElementById('transfer-from'),
+      transferTo: document.getElementById('transfer-to'),
+      transferAmount: document.getElementById('transfer-amount'),
+      transferSlip: document.getElementById('transfer-slip'),
+      slipPreviewContainer: document.getElementById('slip-preview-container'),
+      slipPreview: document.getElementById('slip-preview'),
+
+      modalViewSlip: document.getElementById('modal-view-slip'),
+      btnCloseSlipModal: document.getElementById('btn-close-slip-modal'),
+      slipImageViewer: document.getElementById('slip-image-viewer'),
+      slipTitle: document.getElementById('slip-title'),
+
+      pendingReceiptsCard: document.getElementById('pending-receipts-card'),
+      pendingReceiptsContainer: document.getElementById('pending-receipts-container'),
+
+      authOverlay: document.getElementById('auth-overlay'),
+      loginForm: document.getElementById('login-form'),
+      loginUsername: document.getElementById('login-username'),
+      loginPassword: document.getElementById('login-password'),
+      btnLoginSubmit: document.getElementById('btn-login-submit'),
+      linkShowRegister: document.getElementById('link-show-register'),
+      registerForm: document.getElementById('register-form'),
+      regUsername: document.getElementById('reg-username'),
+      regPassword: document.getElementById('reg-password'),
+      regFriendSelect: document.getElementById('reg-friend-select'),
+      regNewFriendName: document.getElementById('reg-new-friend-name'),
+      btnRegisterSubmit: document.getElementById('btn-register-submit'),
+      linkShowLogin: document.getElementById('link-show-login'),
+      userProfileWidget: document.getElementById('user-profile-widget'),
+      currentUserDisplay: document.getElementById('current-user-display'),
+      btnLogout: document.getElementById('btn-logout'),
+
+      chatAttachFile: document.getElementById('chat-attach-file'),
+      chatPreviewContainer: document.getElementById('chat-preview-container'),
+      chatPreviewImg: document.getElementById('chat-preview-img'),
+      btnChatPreviewRemove: document.getElementById('btn-chat-preview-remove')
+    };
+
+    let uploadedSlipBase64 = '';
+    let uploadedSlipName = '';
+    let uploadedChatSlipBase64 = '';
+    let uploadedChatSlipName = '';
+
+    const categoryDetails = {
+      Food: { label: 'อาหารหลัก', emoji: '🍔', color: 'text-emerald-400 bg-emerald-950/40 border-emerald-500/25' },
+      Drinks: { label: 'เครื่องดื่ม', emoji: '🍹', color: 'text-sky-400 bg-sky-950/40 border-sky-500/25' },
+      Dessert: { label: 'ของหวาน', emoji: '🍰', color: 'text-rose-400 bg-rose-950/40 border-rose-500/25' },
+      Travel: { label: 'เดินทาง', emoji: '🚗', color: 'text-indigo-400 bg-indigo-950/40 border-indigo-500/25' },
+      Others: { label: 'อื่นๆ', emoji: '🛍️', color: 'text-amber-400 bg-amber-950/40 border-amber-500/25' },
+      Settlement: { label: 'ชำระหนี้/แจ้งโอน', emoji: '💸', color: 'text-teal-400 bg-teal-950/40 border-teal-500/25' }
+    };
+
+    const defaultMockHistory = [
+      { id: 2, timestamp: new Date(Date.now() - 3600000).toISOString(), meal: "หมูกระทะริมน้ำยอดฮิต", amount: 600, payer: "นาย A", participants: ["นาย A", "นาย B", "นาย C"], category: "Food", dueDate: new Date(Date.now() + 86400000 * 2).toISOString().split('T')[0] },
+      { id: 1, timestamp: new Date(Date.now() - 7200000).toISOString(), meal: "ชานมไข่มุกพ่นไฟ", amount: 180, payer: "นาย B", participants: ["นาย B", "นาย C"], category: "Drinks", dueDate: new Date(Date.now() - 86400000).toISOString().split('T')[0] }
+    ];
+
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `flex items-center gap-3 p-4 rounded-xl border shadow-2xl transform translate-y-2 opacity-0 transition-all duration-300 backdrop-blur-md`;
+
+      let borderClass = 'border-emerald-500/25 text-emerald-300 bg-slate-900/90';
+      let icon = 'check-circle';
+      let iconColor = 'text-emerald-400';
+
+      if (type === 'error') {
+        borderClass = 'border-rose-500/25 text-rose-300 bg-slate-900/90';
+        icon = 'alert-circle';
+        iconColor = 'text-rose-400';
+      } else if (type === 'info') {
+        borderClass = 'border-amber-500/25 text-amber-300 bg-slate-900/90';
+        icon = 'info';
+        iconColor = 'text-amber-400';
+      }
+
+      toast.className += ` ${borderClass}`;
+      toast.innerHTML = `
+        <i data-lucide="${icon}" class="w-5 h-5 ${iconColor} flex-shrink-0"></i>
+        <div class="text-sm font-semibold">${message}</div>
+      `;
+
+      elements.toastContainer.appendChild(toast);
+      lucide.createIcons();
+
+      setTimeout(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      }, 50);
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-2', 'opacity-0');
+        setTimeout(() => {
+          toast.remove();
+        }, 300);
+      }, 3500);
+    }
+
+    function switchTab(tabName) {
+      state.activeTab = tabName;
+
+      Object.keys(elements.tabs).forEach(t => {
+        if (t === tabName) {
+          elements.tabs[t].classList.add('tab-active');
+          elements.tabs[t].classList.remove('text-slate-400');
+        } else {
+          elements.tabs[t].classList.remove('tab-active');
+          elements.tabs[t].classList.add('text-slate-400');
+        }
+      });
+
+      Object.keys(elements.contentPanes).forEach(pane => {
+        if (pane === tabName) {
+          elements.contentPanes[pane].classList.remove('hidden');
+        } else {
+          elements.contentPanes[pane].classList.add('hidden');
+        }
+      });
+
+      if (tabName === 'chat') {
+        elements.chatBadge.classList.add('hidden');
+        scrollChatToBottom();
+      }
+
+      lucide.createIcons();
+    }
+
+    Object.keys(elements.tabs).forEach(tab => {
+      elements.tabs[tab].addEventListener('click', () => switchTab(tab));
+    });
+
+    elements.btnToggleConfig.addEventListener('click', () => elements.configPanel.classList.toggle('hidden'));
+    elements.btnCloseConfig.addEventListener('click', () => elements.configPanel.classList.add('hidden'));
+    elements.btnSetupNow.addEventListener('click', () => {
+      elements.configPanel.classList.remove('hidden');
+      elements.inputApiUrl.focus();
+    });
+
+    elements.btnSaveConfig.addEventListener('click', () => {
+      const url = elements.inputApiUrl.value.trim();
+      if (!url) {
+        localStorage.removeItem('gingun_api_url');
+        state.apiUrl = '';
+        state.isMockMode = true;
+        showToast('ถอนการเชื่อมต่อ Google Sheets กลับคืนสู่โหมดจำลองออฟไลน์', 'info');
+      } else {
+        localStorage.setItem('gingun_api_url', url);
+        state.apiUrl = url;
+        state.isMockMode = false;
+        showToast('บันทึก Web App URL และดึงข้อมูลใหม่เรียบร้อยแล้ว');
+      }
+      elements.configPanel.classList.add('hidden');
+      updateUiMode();
+      loadData();
+    });
+
+    elements.btnTestConnection.addEventListener('click', async () => {
+      const testUrl = elements.inputApiUrl.value.trim();
+      if (!testUrl) {
+        showToast('กรุณากรอก URL เว็บแอปก่อนกดทดสอบ', 'error');
+        return;
+      }
+
+      elements.btnTestConnection.disabled = true;
+      elements.btnTestConnection.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>กำลังทดสอบ...</span>`;
+      lucide.createIcons();
+
+      try {
+        const queryParams = new URLSearchParams();
+        queryParams.append('friends', JSON.stringify(state.friends));
+        const response = await fetch(`${testUrl}?${queryParams.toString()}`);
+        const data = await response.json();
+
+        if (data && data.status === 'success') {
+          showToast('เชื่อมต่อสำเร็จ! โครงสร้างระบบฐานข้อมูล Google Sheets พร้อมใช้งาน');
+        } else {
+          showToast('เซิร์ฟเวอร์ตอบกลับแต่พบความผิดพลาด: ' + (data.message || 'ไม่ทราบสาเหตุ'), 'error');
+        }
+      } catch (err) {
+        showToast('เชื่อมต่อไม่ได้! ตรวจสอบสิทธิ์ CORS หรือลิงก์ของคุณ', 'error');
+        console.error(err);
+      } finally {
+        elements.btnTestConnection.disabled = false;
+        elements.btnTestConnection.innerHTML = `<i data-lucide="refresh-cw" class="w-4 h-4"></i><span>ทดสอบการเชื่อมต่อ</span>`;
+        lucide.createIcons();
+      }
+    });
+
+    elements.btnAddFriend.addEventListener('click', () => {
+      addFriendRow('', 0);
+    });
+
+    function addFriendRow(name = '', initial = 0) {
+      const id = 'friend-' + Date.now() + '-' + Math.floor(Math.random() * 1000);
+      const rowHtml = `
+        <div id="${id}" class="flex items-center gap-2 bg-slate-900/40 p-2.5 rounded-xl border border-slate-800 hover:border-brand-500/30 transition duration-150">
+          <span class="w-6 h-6 flex-shrink-0 flex items-center justify-center bg-slate-800 text-emerald-400 rounded-lg text-xs font-bold">
+            <i data-lucide="user" class="w-3.5 h-3.5"></i>
+          </span>
+          <input type="text" placeholder="ชื่อเพื่อน" value="${name}" required class="friend-name-input flex-1 min-w-[80px] px-2.5 py-1.5 text-xs font-bold rounded-lg border border-slate-700/60 focus:outline-none focus:border-brand-500 bg-slate-950 text-white">
+
+          <div class="flex items-center gap-1 min-w-[130px]">
+            <span class="text-[10px] font-bold text-slate-400">ค้างชำระ:</span>
+            <input type="number" placeholder="0" value="${initial}" step="0.01" class="friend-initial-input w-20 px-2 py-1.5 text-xs font-bold rounded-lg border border-slate-700/60 focus:outline-none focus:border-brand-500 text-right bg-slate-950 text-white">
+            <span class="text-[10px] font-bold text-slate-400">฿</span>
+          </div>
+
+          <button type="button" class="btn-delete-friend p-1.5 text-slate-400 hover:text-rose-400 hover:bg-rose-950/20 rounded-lg transition" title="ลบคนนี้">
+            <i data-lucide="trash-2" class="w-4 h-4"></i>
+          </button>
+        </div>
+      `;
+      elements.friendsListContainer.insertAdjacentHTML('beforeend', rowHtml);
+      lucide.createIcons();
+
+      document.querySelector(`#${id} .btn-delete-friend`).addEventListener('click', () => {
+        const rows = document.querySelectorAll('.friend-name-input');
+        if (rows.length <= 1) {
+          showToast('กลุ่มต้องมีรายชื่ออย่างน้อย 1 คน', 'error');
+          return;
+        }
+        document.getElementById(id).remove();
+      });
+    }
+
+    function renderFriendsManager() {
+      elements.friendsListContainer.innerHTML = '';
+      state.friends.forEach(f => {
+        addFriendRow(f.name, f.initial);
+      });
+    }
+
+    elements.friendsForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const rows = elements.friendsListContainer.children;
+      const updatedFriends = [];
+      const namesSeen = new Set();
+      let hasDuplicates = false;
+
+      for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        const name = row.querySelector('.friend-name-input').value.trim();
+        const initial = parseFloat(row.querySelector('.friend-initial-input').value) || 0;
+
+        if (!name) continue;
+
+        if (namesSeen.has(name)) {
+          hasDuplicates = true;
+          break;
+        }
+
+        namesSeen.add(name);
+        updatedFriends.push({ name, initial });
+      }
+
+      if (hasDuplicates) {
+        showToast('ไม่สามารถใส่ชื่อเพื่อนที่ซ้ำกันได้!', 'error');
+        return;
+      }
+
+      if (updatedFriends.length === 0) {
+        showToast('กรุณาระบุรายชื่อเพื่อนอย่างน้อย 1 คน', 'error');
+        return;
+      }
+
+      state.friends = updatedFriends;
+      localStorage.setItem('gingun_friends', JSON.stringify(state.friends));
+
+      showToast('อัปเดตข้อมูลและโครงสร้างกลุ่มสำเร็จ!');
+      renderBillSelectors();
+      renderChatSelectors();
+      loadData();
+    });
+
+    function renderBillSelectors() {
+      elements.payerContainer.innerHTML = '';
+      elements.participantsContainer.innerHTML = '';
+
+      state.friends.forEach((friend, idx) => {
+        const payerId = `payer-${idx}`;
+        const partId = `part-${idx}`;
+        const initials = friend.name.charAt(4) || friend.name.charAt(0) || 'U';
+
+        let colorClasses = 'bg-slate-900 text-slate-300 border-slate-800';
+        let avColor = 'bg-slate-800 text-slate-300';
+        if (idx === 0) {
+          colorClasses = 'bg-indigo-950/20 text-indigo-300 border-indigo-500/20';
+          avColor = 'bg-indigo-900/40 text-indigo-200';
+        } else if (idx === 1) {
+          colorClasses = 'bg-rose-950/20 text-rose-300 border-rose-500/20';
+          avColor = 'bg-rose-900/40 text-rose-200';
+        } else if (idx === 2) {
+          colorClasses = 'bg-amber-950/20 text-amber-300 border-amber-500/20';
+          avColor = 'bg-amber-900/40 text-amber-200';
+        }
+
+        const payerHtml = `
+          <div>
+            <input type="radio" name="payer" id="${payerId}" value="${friend.name}" class="hidden payer-radio" ${idx === 0 ? 'checked' : ''}>
+            <label for="${payerId}" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-800/80 bg-slate-900/40 hover:bg-slate-800/60 cursor-pointer transition duration-150 text-center">
+              <span class="w-8 h-8 rounded-full ${avColor} flex items-center justify-center font-bold text-xs mb-1.5 shadow-sm">${initials}</span>
+              <span class="text-[10px] font-bold text-slate-300 truncate max-w-full px-1">${friend.name}</span>
+            </label>
+          </div>
+        `;
+        elements.payerContainer.insertAdjacentHTML('beforeend', payerHtml);
+
+        const partHtml = `
+          <div>
+            <input type="checkbox" name="participants" id="${partId}" value="${friend.name}" class="hidden participant-checkbox" checked>
+            <label for="${partId}" class="flex flex-col items-center justify-center p-2.5 rounded-xl border border-slate-800/80 bg-slate-900/40 hover:bg-slate-800/60 cursor-pointer transition duration-150 text-center">
+              <span class="w-8 h-8 rounded-full ${avColor} flex items-center justify-center font-bold text-xs mb-1.5 shadow-sm">${initials}</span>
+              <span class="text-[10px] font-bold text-slate-300 truncate max-w-full px-1">${friend.name}</span>
+            </label>
+          </div>
+        `;
+        elements.participantsContainer.insertAdjacentHTML('beforeend', partHtml);
+      });
+
+      elements.btnToggleAllParticipants.textContent = 'ยกเลิกทั้งหมด';
+    }
+
+    elements.btnToggleAllParticipants.addEventListener('click', () => {
+      const checkboxes = document.querySelectorAll('.participant-checkbox');
+      const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+      checkboxes.forEach(cb => {
+        cb.checked = !allChecked;
+      });
+
+      elements.btnToggleAllParticipants.textContent = allChecked ? 'เลือกทั้งหมด' : 'ยกเลิกทั้งหมด';
+    });
+
+    function renderChatSelectors() {
+      elements.chatSenderSelect.innerHTML = '';
+      state.friends.forEach(friend => {
+        const option = document.createElement('option');
+        option.value = friend.name;
+        option.textContent = friend.name;
+        option.className = 'bg-slate-900 text-slate-200';
+        elements.chatSenderSelect.appendChild(option);
+      });
+    }
+
+    function renderTransferSelectors() {
+      elements.transferFrom.innerHTML = '';
+      elements.transferTo.innerHTML = '';
+
+      state.friends.forEach(friend => {
+        const optionFrom = document.createElement('option');
+        optionFrom.value = friend.name;
+        optionFrom.textContent = friend.name;
+        optionFrom.className = 'bg-slate-900 text-slate-200';
+        elements.transferFrom.appendChild(optionFrom);
+
+        const optionTo = document.createElement('option');
+        optionTo.value = friend.name;
+        optionTo.textContent = friend.name;
+        optionTo.className = 'bg-slate-900 text-slate-200';
+        elements.transferTo.appendChild(optionTo);
+      });
+
+      if (elements.transferFrom.options.length > 0) elements.transferFrom.selectedIndex = 0;
+      if (elements.transferTo.options.length > 1) elements.transferTo.selectedIndex = 1;
+    }
+
+    elements.billForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const meal = document.getElementById('input-meal').value.trim();
+      const amount = parseFloat(document.getElementById('input-amount').value);
+
+      const selectedPayerEl = document.querySelector('input[name="payer"]:checked');
+      if (!selectedPayerEl) {
+        showToast('กรุณาระบุผู้สำรองเงินจ่าย', 'error');
+        return;
+      }
+      const payer = selectedPayerEl.value;
+
+      const checkedParticipants = Array.from(document.querySelectorAll('.participant-checkbox:checked')).map(cb => cb.value);
+      if (checkedParticipants.length === 0) {
+        showToast('กรุณาเลือกผู้ร่วมหารขั้นต่ำ 1 คน', 'error');
+        return;
+      }
+
+      const selectedCatEl = document.querySelector('input[name="category"]:checked');
+      const category = selectedCatEl ? selectedCatEl.value : 'Food';
+
+      const dueDate = document.getElementById('input-duedate').value;
+
+      const payload = {
+        action: 'addExpense',
+        meal,
+        amount,
+        payer,
+        participants: checkedParticipants,
+        category,
+        dueDate,
+        friends: state.friends
+      };
+
+      setFormLoading(true);
+
+      if (state.isMockMode) {
+        setTimeout(() => {
+          handleMockSubmit(payload);
+          setFormLoading(false);
+
+          document.getElementById('input-meal').value = '';
+          document.getElementById('input-amount').value = '';
+          document.getElementById('input-duedate').value = '';
+        }, 800);
+      } else {
+        try {
+          const response = await fetch(state.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          if (data && data.status === 'success') {
+            state.balances = data.balances;
+            state.history = data.history;
+            if (data.chat) state.chat = data.chat;
+
+            renderBalances();
+            renderSettlements();
+            renderHistory();
+            renderSchedules();
+            renderChat();
+
+            showToast(`ลงข้อมูลบิลมื้ออาหาร "${meal}" ลง Google Sheets สำเร็จ!`);
+
+            document.getElementById('input-meal').value = '';
+            document.getElementById('input-amount').value = '';
+            document.getElementById('input-duedate').value = '';
+          } else {
+            throw new Error(data.message || 'บันทึกบิลล้มเหลว');
+          }
+        } catch (err) {
+          showToast('บันทึกข้อมูลล้มเหลว: ' + err.message, 'error');
+          console.error(err);
+        } finally {
+          setFormLoading(false);
+        }
+      }
+    });
+
+    function setFormLoading(loading) {
+      elements.btnSubmitBill.disabled = loading;
+      if (loading) {
+        elements.btnSubmitBill.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>กำลังบันทึกข้อมูล...</span>`;
+      } else {
+        elements.btnSubmitBill.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i><span>บันทึกประวัติลง Google Sheets 🚀</span>`;
+      }
+      lucide.createIcons();
+    }
+
+    function handleMockSubmit(payload) {
+      const newTx = {
+        id: state.history.length + 1,
+        timestamp: new Date().toISOString(),
+        meal: payload.meal,
+        amount: payload.amount,
+        payer: payload.payer,
+        participants: payload.participants,
+        category: payload.category,
+        dueDate: payload.dueDate,
+        status: payload.status || 'Confirmed',
+        attachment: payload.image || payload.attachment || ''
+      };
+
+      state.history.unshift(newTx);
+      recalculateMockBalances();
+
+      renderBalances();
+      renderSettlements();
+      renderHistory();
+      renderSchedules();
+      renderPendingReceipts();
+      renderTransferHistory();
+      showToast(`จำลองออฟไลน์สำเร็จ: บันทึกมื้อ "${payload.meal}" แล้ว!`);
+    }
+
+    elements.btnRefresh.addEventListener('click', () => {
+      loadData();
+    });
+
+    function updateUiMode() {
+      if (state.isMockMode) {
+        elements.mockBanner.classList.remove('hidden');
+      } else {
+        elements.mockBanner.classList.add('hidden');
+      }
+      elements.inputApiUrl.value = state.apiUrl;
+    }
+
+    function recalculateMockBalances() {
+      const tempBalances = {};
+
+      state.friends.forEach(f => {
+        tempBalances[f.name] = parseFloat(f.initial) || 0;
+      });
+
+      state.history.forEach(tx => {
+        if (tx.status === 'Pending') return;
+        const share = tx.amount / tx.participants.length;
+
+        if (tempBalances[tx.payer] !== undefined) {
+          tempBalances[tx.payer] += tx.amount;
+        }
+
+        tx.participants.forEach(p => {
+          if (tempBalances[p] !== undefined) {
+            tempBalances[p] -= share;
+          }
+        });
+      });
+
+      state.balances = state.friends.map(f => {
+        return {
+          name: f.name,
+          balance: Math.round((tempBalances[f.name] || 0) * 100) / 100
+        };
+      });
+    }
+
+    async function loadData() {
+      state.isLoading = true;
+      renderLoading();
+
+      if (state.isMockMode) {
+        setTimeout(() => {
+          if (state.history.length === 0) {
+            state.history = [...defaultMockHistory];
+          }
+          recalculateMockBalances();
+          state.isLoading = false;
+
+          renderBalances();
+          renderSettlements();
+          renderHistory();
+          renderSchedules();
+          renderPendingReceipts();
+          renderTransferHistory();
+          renderChat();
+        }, 500);
+      } else {
+        try {
+          const queryParams = new URLSearchParams();
+          queryParams.append('friends', JSON.stringify(state.friends));
+
+          const response = await fetch(`${state.apiUrl}?${queryParams.toString()}`);
+          const data = await response.json();
+
+          if (data && data.status === 'success') {
+            state.balances = data.balances;
+            state.history = data.history;
+            if (data.chat) state.chat = data.chat;
+
+            renderBalances();
+            renderSettlements();
+            renderHistory();
+            renderSchedules();
+            renderPendingReceipts();
+            renderTransferHistory();
+            renderChat();
+          } else {
+            throw new Error(data.message || 'รูปแบบการตอบสนองผิดพลาด');
+          }
+        } catch (err) {
+          showToast('ไม่สามารถอ่านข้อมูลได้ สลับสลับคำนวณออฟไลน์ของเบราว์เซอร์', 'error');
+          recalculateMockBalances();
+          renderBalances();
+          renderSettlements();
+          renderHistory();
+          renderSchedules();
+          renderPendingReceipts();
+          renderTransferHistory();
+          renderChat();
+        } finally {
+          state.isLoading = false;
+        }
+      }
+    }
+
+    function renderLoading() {
+      elements.balancesContainer.innerHTML = `
+        <div class="animate-pulse space-y-4">
+          <div class="h-20 bg-slate-900/60 rounded-2xl border border-slate-800"></div>
+          <div class="h-20 bg-slate-900/60 rounded-2xl border border-slate-800"></div>
+          <div class="h-20 bg-slate-900/60 rounded-2xl border border-slate-800"></div>
+        </div>
+      `;
+    }
+
+    function renderBalances() {
+      elements.balancesContainer.innerHTML = '';
+
+      state.balances.forEach((person, index) => {
+        const isPositive = person.balance > 0.01;
+        const isNegative = person.balance < -0.01;
+
+        let statusText = 'ยอดเคลียร์เจ๊ากันพอดี';
+        let balanceClass = 'text-slate-400';
+        let cardBorderClass = 'border-slate-800 bg-slate-900/40';
+        let iconHtml = `<i data-lucide="check-circle" class="w-5 h-5 text-slate-500"></i>`;
+        let sign = '';
+
+        if (isPositive) {
+          statusText = 'รอรับเงินคืน';
+          balanceClass = 'text-emerald-400';
+          cardBorderClass = 'border-emerald-500/10 bg-emerald-950/10';
+          iconHtml = `<i data-lucide="trending-up" class="w-5 h-5 text-emerald-400"></i>`;
+          sign = '+';
+        } else if (isNegative) {
+          statusText = 'ต้องโอนเงินคืนเพื่อน';
+          balanceClass = 'text-rose-400';
+          cardBorderClass = 'border-rose-500/10 bg-rose-950/10';
+          iconHtml = `<i data-lucide="trending-down" class="w-5 h-5 text-rose-400"></i>`;
+        }
+
+        const initials = person.name.charAt(4) || person.name.charAt(0) || 'U';
+        let avColor = 'bg-slate-800 text-slate-400';
+
+        if (index === 0) avColor = 'bg-indigo-900/50 text-indigo-300 border border-indigo-500/20';
+        else if (index === 1) avColor = 'bg-rose-900/50 text-rose-300 border border-rose-500/20';
+        else if (index === 2) avColor = 'bg-amber-900/50 text-amber-300 border border-amber-500/20';
+
+        const friendObj = state.friends.find(f => f.name === person.name);
+        const initialVal = friendObj ? parseFloat(friendObj.initial) || 0 : 0;
+        const billVal = person.balance - initialVal;
+
+        const cardHtml = `
+          <div class="p-4 rounded-2xl border ${cardBorderClass} transition duration-200 hover:border-brand-500/30">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <span class="w-10 h-10 rounded-xl ${avColor} flex items-center justify-center font-bold text-sm shadow-sm">${initials}</span>
+                <div>
+                  <h3 class="font-bold text-slate-100 text-sm sm:text-base">${person.name}</h3>
+                  <p class="text-xs text-slate-400 font-medium">${statusText}</p>
+                </div>
+              </div>
+
+              <div class="flex items-center gap-3 text-right">
+                <div>
+                  <p class="text-base sm:text-lg font-bold ${balanceClass}">${sign}${person.balance.toFixed(2)} บาท</p>
+                </div>
+                <div class="hidden sm:block">
+                  ${iconHtml}
+                </div>
+              </div>
+            </div>
+
+            <div class="mt-2.5 pt-2 border-t border-slate-800/40 flex justify-between text-[10px] text-slate-500 font-semibold uppercase tracking-wider">
+              <span>ยกยอดเริ่มต้น: ${initialVal.toFixed(2)} ฿</span>
+              <span>ส่วนต่างยอดหาร: ${billVal >= 0 ? '+' : ''}${billVal.toFixed(2)} ฿</span>
+            </div>
+          </div>
+        `;
+        elements.balancesContainer.insertAdjacentHTML('beforeend', cardHtml);
+      });
+      lucide.createIcons();
+      renderOverallSummary();
+    }
+
+    function renderOverallSummary() {
+      const groupTotalEl = document.getElementById('summary-group-total');
+      const friendsContainer = document.getElementById('summary-friends-container');
+
+      if (!groupTotalEl || !friendsContainer) return;
+
+      let groupTotal = 0;
+      const totalPaid = {};
+      const totalConsumed = {};
+
+      state.friends.forEach(f => {
+        totalPaid[f.name] = 0;
+        totalConsumed[f.name] = 0;
+      });
+
+      state.history.forEach(tx => {
+        groupTotal += tx.amount;
+
+        if (totalPaid[tx.payer] !== undefined) {
+          totalPaid[tx.payer] += tx.amount;
+        }
+
+        const share = tx.amount / tx.participants.length;
+        tx.participants.forEach(p => {
+          if (totalConsumed[p] !== undefined) {
+            totalConsumed[p] += share;
+          }
+        });
+      });
+
+      groupTotalEl.textContent = `${groupTotal.toLocaleString('th-TH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} บาท`;
+
+      friendsContainer.innerHTML = '';
+      state.friends.forEach(friend => {
+        const paid = totalPaid[friend.name] || 0;
+        const consumed = totalConsumed[friend.name] || 0;
+        const initial = parseFloat(friend.initial) || 0;
+
+        const balObj = state.balances.find(b => b.name === friend.name);
+        const netBalance = balObj ? balObj.balance : (initial + paid - consumed);
+
+        let netClass = 'text-slate-400';
+        let netSign = '';
+        if (netBalance > 0.01) {
+          netClass = 'text-emerald-400';
+          netSign = '+';
+        } else if (netBalance < -0.01) {
+          netClass = 'text-rose-400';
+        }
+
+        const rowHtml = `
+          <tr class="hover:bg-slate-900/35 transition">
+            <td class="py-3 font-extrabold text-slate-100">${friend.name}</td>
+            <td class="py-3 text-right text-sky-400 font-mono">${paid.toFixed(2)} ฿</td>
+            <td class="py-3 text-right text-amber-400 font-mono">${consumed.toFixed(2)} ฿</td>
+            <td class="py-3 text-right text-slate-400 font-mono">${initial.toFixed(2)} ฿</td>
+            <td class="py-3 text-right ${netClass} font-mono font-bold">${netSign}${netBalance.toFixed(2)} ฿</td>
+          </tr>
+        `;
+        friendsContainer.insertAdjacentHTML('beforeend', rowHtml);
+      });
+    }
+
+    function calculateSettlements(balances) {
+      let debtors = [];
+      let creditors = [];
+
+      balances.forEach(b => {
+        if (b.balance < -0.01) {
+          debtors.push({ name: b.name, amount: -b.balance });
+        } else if (b.balance > 0.01) {
+          creditors.push({ name: b.name, amount: b.balance });
+        }
+      });
+
+      debtors.sort((a, b) => b.amount - a.amount);
+      creditors.sort((a, b) => b.amount - a.amount);
+
+      const transactions = [];
+      let d = 0;
+      let c = 0;
+
+      while (d < debtors.length && c < creditors.length) {
+        const debtor = debtors[d];
+        const creditor = creditors[c];
+
+        const transfer = Math.min(debtor.amount, creditor.amount);
+
+        transactions.push({
+          from: debtor.name,
+          to: creditor.name,
+          amount: Math.round(transfer * 100) / 100
+        });
+
+        debtor.amount -= transfer;
+        creditor.amount -= transfer;
+
+        if (debtor.amount < 0.01) d++;
+        if (creditor.amount < 0.01) c++;
+      }
+      return transactions;
+    }
+
+    function renderSettlements() {
+      elements.settlementsContainer.innerHTML = '';
+
+      const settlements = calculateSettlements(state.balances);
+
+      if (settlements.length === 0) {
+        elements.settlementsContainer.innerHTML = `
+          <div class="flex items-center gap-3 p-4 rounded-xl border border-emerald-500/20 bg-emerald-950/20 text-emerald-400 text-xs sm:text-sm font-medium">
+            <i data-lucide="check-circle" class="w-5 h-5 text-emerald-400 flex-shrink-0"></i>
+            <span>ยอดหนี้สินหักลบกันแล้วลงตัวทั้งหมดเรียบร้อย!</span>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      settlements.forEach((s, idx) => {
+        let fromColor = 'bg-slate-800 text-slate-300';
+        let toColor = 'bg-slate-800 text-slate-300';
+
+        const fromIdx = state.friends.findIndex(f => f.name === s.from);
+        const toIdx = state.friends.findIndex(f => f.name === s.to);
+
+        if (fromIdx === 0) fromColor = 'bg-indigo-950/50 text-indigo-300 border border-indigo-500/20';
+        else if (fromIdx === 1) fromColor = 'bg-rose-950/50 text-rose-300 border border-rose-500/20';
+        else if (fromIdx === 2) fromColor = 'bg-amber-950/50 text-amber-300 border border-amber-500/20';
+
+        if (toIdx === 0) toColor = 'bg-indigo-950/50 text-indigo-300 border border-indigo-500/20';
+        else if (toIdx === 1) toColor = 'bg-rose-950/50 text-rose-300 border border-rose-500/20';
+        else if (toIdx === 2) toColor = 'bg-amber-950/50 text-amber-300 border border-amber-500/20';
+
+        const cardHtml = `
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 p-3.5 rounded-xl border border-slate-800 bg-slate-900/30 hover:border-slate-800 transition">
+            <div class="flex items-center gap-2 flex-wrap">
+              <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${fromColor}">${s.from}</span>
+              <span class="text-slate-500"><i data-lucide="arrow-right" class="w-4 h-4"></i></span>
+              <span class="px-2.5 py-1 text-xs font-bold rounded-lg ${toColor}">${s.to}</span>
+            </div>
+            <div class="flex items-center justify-between sm:justify-end gap-3 border-t border-slate-800/40 sm:border-none pt-2 sm:pt-0 flex-wrap">
+              <button type="button" class="px-2.5 py-1 bg-amber-950/40 hover:bg-amber-900/40 border border-amber-500/20 text-amber-400 hover:text-amber-300 font-bold text-[10px] rounded-lg transition" onclick="openReportTransferModal('${s.from}', '${s.to}', ${s.amount})">
+                แจ้งโอนเงิน
+              </button>
+              <span class="font-bold text-sm sm:text-base text-emerald-400">${s.amount.toFixed(2)} บาท</span>
+            </div>
+          </div>
+        `;
+        elements.settlementsContainer.insertAdjacentHTML('beforeend', cardHtml);
+      });
+      lucide.createIcons();
+    }
+
+    elements.categoryFilter.addEventListener('change', () => {
+      renderHistory();
+    });
+
+    function renderHistory() {
+      elements.historyContainer.innerHTML = '';
+
+      const filter = elements.categoryFilter.value;
+      const filteredHistory = filter === 'All' 
+        ? state.history 
+        : state.history.filter(tx => tx.category === filter);
+
+      if (filteredHistory.length === 0) {
+        elements.historyContainer.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-6 text-slate-500 font-medium text-xs">ไม่พบประวัติค่าใช้จ่ายในหมวดหมู่นี้</td>
+          </tr>
+        `;
+        return;
+      }
+
+      filteredHistory.forEach(tx => {
+        const date = new Date(tx.timestamp);
+        const formatOptions = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' };
+        const dateStr = date.toLocaleDateString('th-TH', formatOptions);
+
+        const payerIdx = state.friends.findIndex(f => f.name === tx.payer);
+        let payerBadge = 'bg-slate-800 text-slate-400';
+        if (payerIdx === 0) payerBadge = 'bg-indigo-900/50 text-indigo-300';
+        else if (payerIdx === 1) payerBadge = 'bg-rose-900/50 text-rose-300';
+        else if (payerIdx === 2) payerBadge = 'bg-amber-900/50 text-amber-300';
+
+        const cat = categoryDetails[tx.category || 'Food'] || categoryDetails.Food;
+        const dueStr = tx.dueDate ? ` <span class="ml-1.5 px-1.5 py-0.5 rounded text-[8px] bg-slate-800 border border-slate-700/60 text-slate-400">ครบกำหนด: ${tx.dueDate}</span>` : '';
+        const slipBadge = tx.attachment ? ` <button type="button" class="ml-1.5 px-1.5 py-0.5 rounded text-[8px] bg-sky-950/40 text-sky-400 border border-sky-500/25 hover:bg-sky-900/30 transition" onclick="viewSlip('${tx.attachment}', '${tx.meal}')">ดูสลิป</button>` : '';
+
+        const rowHtml = `
+          <tr class="hover:bg-slate-900/40 transition duration-150">
+            <td class="py-3.5 pr-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
+                <span class="text-base">${cat.emoji}</span>
+                <span class="font-bold text-slate-200 text-sm">${tx.meal}</span>
+                ${slipBadge}
+              </div>
+              <div class="text-[10px] text-slate-500 font-semibold uppercase mt-0.5">${dateStr}${dueStr}</div>
+            </td>
+            <td class="py-3.5 px-2">
+              <span class="px-2 py-0.5 rounded text-[10px] font-bold ${payerBadge}">${tx.payer}</span>
+            </td>
+            <td class="py-3.5 px-2">
+              <p class="text-[10px] text-slate-400 max-w-[150px] truncate" title="${tx.participants.join(', ')}">
+                ${tx.participants.join(', ')}
+              </p>
+            </td>
+            <td class="py-3.5 pl-2 text-right">
+              <span class="font-bold text-emerald-400 text-sm">${tx.amount.toFixed(2)}</span>
+            </td>
+          </tr>
+        `;
+        elements.historyContainer.insertAdjacentHTML('beforeend', rowHtml);
+      });
+    }
+
+    function renderChat() {
+      const activeSender = elements.chatSenderSelect.value;
+      const countBefore = elements.chatMessagesContainer.children.length;
+
+      elements.chatMessagesContainer.innerHTML = '';
+
+      if (state.chat.length === 0) {
+        elements.chatMessagesContainer.innerHTML = `
+          <div class="flex flex-col items-center justify-center h-full text-slate-500 gap-2">
+            <i data-lucide="message-square-dashed" class="w-8 h-8 text-slate-600"></i>
+            <p class="text-xs font-semibold">ห้องแชทยังว่างเปล่า ลองทักทายคุยกันสิ</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      state.chat.forEach(msg => {
+        const isMe = msg.sender === activeSender;
+        const initials = msg.sender.charAt(4) || msg.sender.charAt(0) || 'U';
+        const date = new Date(msg.timestamp);
+        const timeStr = date.toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' });
+
+        let bubbleClass = isMe ? 'chat-bubble-me text-white' : 'chat-bubble-other text-slate-200';
+        let containerClass = isMe ? 'flex-row-reverse' : '';
+        let avatarColor = 'bg-slate-800 text-slate-400';
+
+        const friendIdx = state.friends.findIndex(f => f.name === msg.sender);
+        if (friendIdx === 0) avatarColor = 'bg-indigo-900/50 text-indigo-300';
+        else if (friendIdx === 1) avatarColor = 'bg-rose-900/50 text-rose-300';
+        else if (friendIdx === 2) avatarColor = 'bg-amber-900/50 text-amber-300';
+
+        const attachmentHtml = msg.attachment ? `
+          <div class="mt-2 rounded-xl overflow-hidden max-w-xs cursor-pointer border border-slate-800 bg-slate-950 shadow-inner group" onclick="viewSlip('${msg.attachment}', '${msg.sender}')">
+            <img src="${msg.attachment}" class="max-h-40 object-contain w-full hover:scale-105 transition duration-200">
+          </div>
+        ` : '';
+
+        const messageHtml = `
+          <div class="flex items-end gap-2.5 ${containerClass}">
+            <span class="w-8 h-8 rounded-xl ${avatarColor} flex items-center justify-center font-bold text-xs shadow-sm flex-shrink-0" title="${msg.sender}">${initials}</span>
+            <div class="flex flex-col max-w-[70%]">
+              <span class="text-[9px] text-slate-500 font-bold mb-0.5 px-1 ${isMe ? 'text-right' : ''}">${msg.sender}</span>
+              <div class="px-4 py-2.5 text-xs font-medium ${bubbleClass}">
+                <p class="leading-relaxed break-words">${msg.message}</p>
+                ${attachmentHtml}
+              </div>
+              <span class="text-[8px] text-slate-500 mt-1 px-1.5 ${isMe ? 'text-right' : ''}">${timeStr}</span>
+            </div>
+          </div>
+        `;
+        elements.chatMessagesContainer.insertAdjacentHTML('beforeend', messageHtml);
+      });
+
+      if (state.activeTab !== 'chat' && countBefore > 0 && state.chat.length > countBefore) {
+        elements.chatBadge.classList.remove('hidden');
+      }
+
+      scrollChatToBottom();
+      lucide.createIcons();
+    }
+
+    function scrollChatToBottom() {
+      elements.chatMessagesContainer.scrollTop = elements.chatMessagesContainer.scrollHeight;
+    }
+
+    elements.chatSenderSelect.addEventListener('change', () => {
+      renderChat();
+      renderPendingReceipts();
+    });
+
+    elements.chatForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const message = elements.chatInput.value.trim();
+      if (!message && !uploadedChatSlipBase64) return;
+
+      const sender = state.currentUser ? state.currentUser.friendName : elements.chatSenderSelect.value;
+      if (!sender) {
+        showToast('กรุณาระบุคนส่งข้อความแชท', 'error');
+        return;
+      }
+
+      const payload = {
+        action: 'postChat',
+        sender,
+        message,
+        image: uploadedChatSlipBase64,
+        imageName: uploadedChatSlipName,
+        friends: state.friends
+      };
+
+      elements.chatInput.value = '';
+      elements.chatPreviewContainer.classList.add('hidden');
+      elements.chatPreviewImg.src = '';
+      elements.chatAttachFile.value = '';
+      const localAttachment = uploadedChatSlipBase64;
+      uploadedChatSlipBase64 = '';
+      uploadedChatSlipName = '';
+
+      if (state.isMockMode) {
+        handleMockChat(sender, message, localAttachment);
+      } else {
+        try {
+          const response = await fetch(state.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          if (data && data.status === 'success') {
+            state.chat = data.chat;
+            state.balances = data.balances;
+            state.history = data.history;
+            renderChat();
+            renderBalances();
+            renderSettlements();
+          } else {
+            throw new Error(data.message || 'ส่งแชทล้มเหลว');
+          }
+        } catch (err) {
+          showToast('ไม่สามารถส่งแชทลงสเปรดชีตได้: ' + err.message, 'error');
+          handleMockChat(sender, message, localAttachment);
+        }
+      }
+    });
+
+    function handleMockChat(sender, message, attachment = '') {
+      state.chat.push({
+        timestamp: new Date().toISOString(),
+        sender,
+        message,
+        attachment
+      });
+      localStorage.setItem('gingun_chat', JSON.stringify(state.chat));
+      renderChat();
+    }
+
+    elements.btnScheduleFilterAll.addEventListener('click', () => {
+      state.scheduleFilter = 'all';
+      elements.btnScheduleFilterAll.classList.add('active', 'bg-slate-800');
+      elements.btnScheduleFilterAll.classList.remove('bg-slate-900/60', 'text-slate-400');
+      elements.btnScheduleFilterPending.classList.remove('active', 'bg-slate-800');
+      elements.btnScheduleFilterPending.classList.add('bg-slate-900/60', 'text-slate-400');
+      renderSchedules();
+    });
+
+    elements.btnScheduleFilterPending.addEventListener('click', () => {
+      state.scheduleFilter = 'pending';
+      elements.btnScheduleFilterPending.classList.add('active', 'bg-slate-800');
+      elements.btnScheduleFilterPending.classList.remove('bg-slate-900/60', 'text-slate-400');
+      elements.btnScheduleFilterAll.classList.remove('active', 'bg-slate-800');
+      elements.btnScheduleFilterAll.classList.add('bg-slate-900/60', 'text-slate-400');
+      renderSchedules();
+    });
+
+    function renderSchedules() {
+      elements.schedulesList.innerHTML = '';
+
+      let schedules = state.history.filter(tx => tx.dueDate);
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+
+      if (state.scheduleFilter === 'pending') {
+
+        const isSettleAll = state.balances.every(b => Math.abs(b.balance) < 0.1);
+        if (isSettleAll) {
+          schedules = [];
+        }
+      }
+
+      if (schedules.length === 0) {
+        elements.schedulesList.innerHTML = `
+          <div class="col-span-full flex flex-col items-center justify-center p-8 border border-slate-800 bg-slate-900/20 rounded-2xl text-slate-500 gap-2">
+            <i data-lucide="calendar-check" class="w-8 h-8 text-slate-600"></i>
+            <p class="text-xs font-semibold">ไม่มีรายการกำหนดชำระเงินที่ต้องการแสดง</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      schedules.forEach(s => {
+        const dueDateObj = new Date(s.dueDate);
+        dueDateObj.setHours(0,0,0,0);
+
+        const diffTime = dueDateObj - now;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+        let statusBadge = '';
+        let statusClass = '';
+        let daysText = '';
+
+        const isGroupSettled = state.balances.every(b => Math.abs(b.balance) < 0.1);
+
+        if (isGroupSettled) {
+          statusBadge = 'เคลียร์ยอดแล้ว';
+          statusClass = 'bg-emerald-950/50 text-emerald-400 border-emerald-500/20';
+          daysText = 'การเงินลงตัวเจ๊ากันแล้ว';
+        } else if (diffDays < 0) {
+          statusBadge = 'เกินกำหนดจ่าย';
+          statusClass = 'bg-rose-950/50 text-rose-400 border-rose-500/20';
+          daysText = `เกินกำหนดมาแล้ว ${Math.abs(diffDays)} วัน ⚠️`;
+        } else if (diffDays === 0) {
+          statusBadge = 'ครบกำหนดวันนี้';
+          statusClass = 'bg-amber-950/50 text-amber-400 border-amber-500/20';
+          daysText = 'ต้องเคลียร์ชำระภายในวันนี้ ⏰';
+        } else {
+          statusBadge = 'รอครบกำหนด';
+          statusClass = 'bg-sky-950/50 text-sky-400 border-sky-500/20';
+          daysText = `เหลือเวลาอีก ${diffDays} วัน`;
+        }
+
+        const cat = categoryDetails[s.category || 'Food'] || categoryDetails.Food;
+        const initials = s.payer.charAt(4) || s.payer.charAt(0) || 'U';
+
+        const cardHtml = `
+          <div class="p-5 rounded-2xl border border-slate-800 bg-slate-900/40 hover:border-slate-700/50 transition">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-2">
+                <span class="text-xl">${cat.emoji}</span>
+                <div>
+                  <h3 class="font-extrabold text-slate-100 text-sm">${s.meal}</h3>
+                  <span class="text-[9px] text-slate-400 font-bold uppercase">${cat.label}</span>
+                </div>
+              </div>
+
+              <span class="px-2.5 py-0.5 rounded-lg text-[10px] font-bold border ${statusClass}">
+                ${statusBadge}
+              </span>
+            </div>
+
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400 font-medium">ยอดเงินรวม:</span>
+                <span class="font-bold text-white">${s.amount.toFixed(2)} บาท</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400 font-medium">วันครบกำหนด:</span>
+                <span class="font-bold text-emerald-400 font-mono">${s.dueDate}</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400 font-medium">คนจ่ายล่วงหน้า:</span>
+                <span class="font-bold text-slate-200">${s.payer}</span>
+              </div>
+              <div class="flex justify-between text-xs">
+                <span class="text-slate-400 font-medium">ผู้ร่วมหาร:</span>
+                <span class="font-bold text-slate-300 text-right truncate max-w-[180px]" title="${s.participants.join(', ')}">${s.participants.join(', ')}</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/60 flex items-center justify-between">
+              <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">วันเหลือชำระ</span>
+              <span class="text-xs font-bold ${diffDays < 0 && !isGroupSettled ? 'text-rose-400' : 'text-slate-300'}">${daysText}</span>
+            </div>
+          </div>
+        `;
+        elements.schedulesList.insertAdjacentHTML('beforeend', cardHtml);
+      });
+      lucide.createIcons();
+    }
+
+    function openReportTransferModal(fromFriend, toFriend, amountVal) {
+      switchTab('transfer');
+
+      elements.transferFrom.value = fromFriend;
+      elements.transferTo.value = toFriend;
+      elements.transferAmount.value = amountVal.toFixed(2);
+
+      elements.transferSlip.value = '';
+      elements.slipPreviewContainer.classList.add('hidden');
+      elements.slipPreview.src = '';
+      uploadedSlipBase64 = '';
+      uploadedSlipName = '';
+    }
+    window.openReportTransferModal = openReportTransferModal;
+
+    function viewSlip(urlOrBase64, title) {
+      elements.slipTitle.textContent = 'หลักฐานสลิปการโอนเงิน: ' + title;
+      elements.slipImageViewer.src = urlOrBase64;
+      elements.modalViewSlip.classList.remove('hidden');
+    }
+    window.viewSlip = viewSlip;
+
+    function setupTransferListeners() {
+      elements.btnCloseSlipModal.addEventListener('click', () => {
+        elements.modalViewSlip.classList.add('hidden');
+      });
+
+      elements.transferSlip.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadedSlipName = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedSlipBase64 = evt.target.result;
+          elements.slipPreview.src = uploadedSlipBase64;
+          elements.slipPreviewContainer.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      elements.transferForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const fromFriend = elements.transferFrom.value;
+        const toFriend = elements.transferTo.value;
+        const amount = parseFloat(elements.transferAmount.value);
+
+        if (isNaN(amount) || amount <= 0) {
+          showToast('จำนวนเงินไม่ถูกต้อง', 'error');
+          return;
+        }
+
+        if (fromFriend === toFriend) {
+          showToast('ผู้โอนเงินและผู้รับเงินต้องไม่เป็นคนเดียวกัน', 'error');
+          return;
+        }
+
+        if (!uploadedSlipBase64) {
+          showToast('กรุณาอัปโหลดรูปภาพสลิปหลักฐานโอนเงิน', 'error');
+          return;
+        }
+
+        const payload = {
+          action: 'addExpense',
+          meal: `โอนคืนยอดค้างสะสม (${fromFriend} -> ${toFriend})`,
+          amount: amount,
+          payer: fromFriend,
+          participants: [toFriend],
+          category: 'Settlement',
+          dueDate: '',
+          status: 'Pending',
+          image: uploadedSlipBase64,
+          imageName: uploadedSlipName,
+          friends: state.friends
+        };
+
+        const btn = document.getElementById('btn-submit-transfer');
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>กำลังส่งหลักฐาน...</span>`;
+        lucide.createIcons();
+
+        const resetForm = () => {
+          elements.transferAmount.value = '';
+          elements.transferSlip.value = '';
+          elements.slipPreviewContainer.classList.add('hidden');
+          elements.slipPreview.src = '';
+          uploadedSlipBase64 = '';
+          uploadedSlipName = '';
+        };
+
+        if (state.isMockMode) {
+          setTimeout(() => {
+            handleMockSubmit(payload);
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>ส่งหลักฐานแจ้งโอนเงิน 🚀</span>`;
+            resetForm();
+            showToast('ส่งหลักฐานโอนเงินแล้ว! รอยืนยัน');
+          }, 800);
+        } else {
+          try {
+            const response = await fetch(state.apiUrl, {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (data && data.status === 'success') {
+              state.balances = data.balances;
+              state.history = data.history;
+              if (data.chat) state.chat = data.chat;
+
+              renderBalances();
+              renderSettlements();
+              renderHistory();
+              renderSchedules();
+              renderPendingReceipts();
+              renderTransferHistory();
+              renderChat();
+
+              resetForm();
+              showToast('ส่งหลักฐานสำเร็จ! รอยืนยันจากผู้รับเงิน');
+            } else {
+              throw new Error(data.message || 'แจ้งโอนล้มเหลว');
+            }
+          } catch (err) {
+            showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>ส่งหลักฐานแจ้งโอนเงิน 🚀</span>`;
+            lucide.createIcons();
+          }
+        }
+      });
+    }
+
+    function renderPendingReceipts() {
+      const container = document.getElementById('pending-receipts-container');
+      const card = document.getElementById('pending-receipts-card');
+
+      if (!container || !card) return;
+
+      const pending = state.history.filter(tx => tx.category === 'Settlement' && tx.status === 'Pending');
+      const currentUser = state.currentUser ? state.currentUser.friendName : elements.chatSenderSelect.value;
+
+      const pendingForMe = pending.filter(p => (p.participants[0] || '') === currentUser);
+      if (pendingForMe.length > 0) {
+        if (elements.transferBadge) {
+          elements.transferBadge.classList.remove('hidden');
+          elements.transferBadge.textContent = pendingForMe.length;
+        }
+      } else {
+        if (elements.transferBadge) {
+          elements.transferBadge.classList.add('hidden');
+        }
+      }
+
+      if (pending.length === 0) {
+        card.classList.add('hidden');
+        return;
+      }
+
+      card.classList.remove('hidden');
+      container.innerHTML = '';
+
+      pending.forEach(p => {
+        const date = new Date(p.timestamp);
+        const dateStr = date.toLocaleDateString('th-TH', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
+
+        const sender = p.payer;
+        const recipient = p.participants[0] || '';
+        const isRecipient = currentUser === recipient;
+
+        let actionButtonHtml = '';
+        if (isRecipient) {
+          actionButtonHtml = `
+            <button type="button" class="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-sm transition" onclick="confirmPayment('${p.id}')">
+              ยืนยันได้รับเงิน
+            </button>
+          `;
+        } else {
+          actionButtonHtml = `
+            <span class="px-2.5 py-1 bg-slate-800 border border-slate-700/60 text-slate-400 font-bold text-[10px] rounded-lg">
+              รอ ${recipient} ยืนยัน
+            </span>
+          `;
+        }
+
+        const slipBtnHtml = p.attachment ? `
+          <button type="button" class="px-2.5 py-1 bg-sky-950/30 text-sky-400 hover:text-sky-300 border border-sky-500/25 font-bold text-[10px] rounded-lg transition" onclick="viewSlip('${p.attachment}', '${sender} -> ${recipient}')">
+            ดูสลิปโอนเงิน
+          </button>
+        ` : '';
+
+        const itemHtml = `
+          <div class="p-4 rounded-2xl border border-amber-500/10 bg-amber-950/5 flex flex-col justify-between gap-4">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="text-xs text-slate-400 font-bold uppercase mb-1">แจ้งโอนชำระเงินสะสม</div>
+                <div class="text-sm font-bold text-white flex items-center gap-1.5">
+                  <span>${sender}</span>
+                  <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-500"></i>
+                  <span>${recipient}</span>
+                </div>
+                <div class="text-[10px] text-slate-500 font-semibold mt-1">${dateStr}</div>
+              </div>
+
+              <div class="text-right">
+                <span class="text-sm font-bold text-emerald-400 block">${p.amount.toFixed(2)} บาท</span>
+                <span class="px-1.5 py-0.5 rounded text-[8px] font-bold bg-amber-950/60 border border-amber-500/20 text-amber-300">รอยืนยันการรับเงิน</span>
+              </div>
+            </div>
+
+            <div class="pt-3 border-t border-slate-800/40 flex items-center justify-between gap-2">
+              ${slipBtnHtml}
+              ${actionButtonHtml}
+            </div>
+          </div>
+        `;
+        container.insertAdjacentHTML('beforeend', itemHtml);
+      });
+
+      lucide.createIcons();
+    }
+    window.renderPendingReceipts = renderPendingReceipts;
+
+    function renderTransferHistory() {
+      const container = document.getElementById('transfer-history-container');
+      if (!container) return;
+
+      container.innerHTML = '';
+
+      const transfers = state.history.filter(tx => tx.category === 'Settlement');
+
+      if (transfers.length === 0) {
+        container.innerHTML = `
+          <tr>
+            <td colspan="4" class="text-center py-6 text-slate-500 font-medium text-xs">ไม่พบประวัติการแจ้งโอนเงิน</td>
+          </tr>
+        `;
+        return;
+      }
+
+      transfers.forEach(tx => {
+        const date = new Date(tx.timestamp);
+        const formatOptions = { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' };
+        const dateStr = date.toLocaleDateString('th-TH', formatOptions);
+
+        const sender = tx.payer;
+        const recipient = tx.participants[0] || '';
+
+        const slipBtnHtml = tx.attachment ? `
+          <button type="button" class="px-2 py-0.5 rounded text-[10px] bg-sky-950/40 text-sky-400 border border-sky-500/25 hover:bg-sky-900/30 transition" onclick="viewSlip('${tx.attachment}', '${sender} -> ${recipient}')">
+            ดูสลิป
+          </button>
+        ` : '<span class="text-slate-600">-</span>';
+
+        let statusHtml = '';
+        if (tx.status === 'Pending') {
+          statusHtml = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-950/60 border border-amber-500/20 text-amber-300">รอยืนยัน</span>`;
+        } else {
+          statusHtml = `<span class="px-1.5 py-0.5 rounded text-[10px] font-bold bg-emerald-950/60 border border-emerald-500/20 text-emerald-300">สำเร็จ</span>`;
+        }
+
+        const rowHtml = `
+          <tr class="hover:bg-slate-900/40 transition duration-150 border-b border-slate-800/20">
+            <td class="py-3 pr-2">
+              <div class="font-bold text-slate-200 text-xs sm:text-sm flex items-center gap-1">
+                <span>${sender}</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5 text-slate-500"></i>
+                <span>${recipient}</span>
+              </div>
+              <div class="text-[9px] text-slate-500 font-semibold mt-0.5">${dateStr}</div>
+            </td>
+            <td class="py-3 px-2 text-center">
+              ${slipBtnHtml}
+            </td>
+            <td class="py-3 px-2 text-center">
+              ${statusHtml}
+            </td>
+            <td class="py-3 pl-2 text-right font-semibold">
+              <span class="font-bold text-emerald-400 text-xs sm:text-sm font-mono">${tx.amount.toFixed(2)}</span>
+            </td>
+          </tr>
+        `;
+        container.insertAdjacentHTML('beforeend', rowHtml);
+      });
+      lucide.createIcons();
+    }
+    window.renderTransferHistory = renderTransferHistory;
+
+    async function confirmPayment(id) {
+      if (!state.currentUser) {
+        showToast('กรุณาเข้าสู่ระบบเพื่อยืนยันยอดเงิน', 'error');
+        return;
+      }
+
+      if (state.isMockMode) {
+        const tx = state.history.find(t => t.id === id || t.id.toString() === id.toString());
+        if (tx) {
+          const recipient = tx.participants[0] || '';
+          if (recipient !== state.currentUser.friendName) {
+            showToast('คุณไม่ใช่ผู้รับเงินของรายการแจ้งโอนนี้ จึงไม่มีสิทธิ์กดยืนยันยอด', 'error');
+            return;
+          }
+          tx.status = 'Confirmed';
+          recalculateMockBalances();
+          renderBalances();
+          renderSettlements();
+          renderHistory();
+          renderPendingReceipts();
+          renderTransferHistory();
+          showToast('ยืนยันได้รับเงินชำระหนี้แล้ว!');
+        }
+      } else {
+        showToast('กำลังดำเนินการยืนยัน...', 'info');
+        try {
+          const response = await fetch(state.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify({
+              action: 'confirmPayment',
+              id: id,
+              friendName: state.currentUser.friendName,
+              friends: state.friends
+            })
+          });
+          const data = await response.json();
+          if (data && data.status === 'success') {
+            state.balances = data.balances;
+            state.history = data.history;
+            if (data.chat) state.chat = data.chat;
+
+            renderBalances();
+            renderSettlements();
+            renderHistory();
+            renderPendingReceipts();
+            renderTransferHistory();
+            showToast('ยืนยันเสร็จสิ้น! ยอดดุลในระบบได้รับการอัปเดต');
+          } else {
+            throw new Error(data.message || 'ยืนยันล้มเหลว');
+          }
+        } catch (err) {
+          showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+        }
+      }
+    }
+    window.confirmPayment = confirmPayment;
+
+    function populateRegisterFriendDropdown() {
+      const select = elements.regFriendSelect;
+      if (!select) return;
+      select.innerHTML = '';
+
+      state.friends.forEach(f => {
+        const opt = document.createElement('option');
+        opt.value = f.name;
+        opt.textContent = f.name;
+        select.appendChild(opt);
+      });
+
+      const optNew = document.createElement('option');
+      optNew.value = '__new__';
+      optNew.textContent = '+ เพิ่มรายชื่อเพื่อนคนใหม่...';
+      select.appendChild(optNew);
+
+      const newNameInput = elements.regNewFriendName;
+      select.addEventListener('change', () => {
+        if (select.value === '__new__') {
+          newNameInput.classList.remove('hidden');
+          newNameInput.required = true;
+        } else {
+          newNameInput.classList.add('hidden');
+          newNameInput.required = false;
+        }
+      });
+    }
+
+    function handleLoginSuccess() {
+      elements.authOverlay.classList.add('hidden');
+      elements.currentUserDisplay.textContent = `${state.currentUser.friendName} (${state.currentUser.username})`;
+      elements.userProfileWidget.classList.remove('hidden');
+
+      const roleContainer = document.getElementById('role-select-container');
+      if (roleContainer) roleContainer.classList.add('hidden');
+
+      if (elements.chatSenderSelect) {
+        elements.chatSenderSelect.value = state.currentUser.friendName;
+      }
+
+      const payerRadios = document.querySelectorAll('.payer-radio');
+      payerRadios.forEach(radio => {
+        if (radio.value === state.currentUser.friendName) {
+          radio.checked = true;
+        }
+      });
+
+      loadData();
+    }
+
+    function setupLoginFormSubmit() {
+      elements.loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = elements.loginUsername.value.trim();
+        const password = elements.loginPassword.value.trim();
+
+        if (!username || !password) {
+          showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+          return;
+        }
+
+        const payload = {
+          action: 'login',
+          username,
+          password
+        };
+
+        const btn = elements.btnLoginSubmit;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>กำลังเข้าสู่ระบบ...</span>`;
+        lucide.createIcons();
+
+        if (state.isMockMode) {
+          setTimeout(() => {
+            const mockUsers = getMockUsers();
+            const matched = mockUsers.find(u => u.username.toLowerCase() === username.toLowerCase() && u.password === password);
+            if (!matched) {
+              showToast('ชื่อผู้ใช้งานหรือรหัสผ่านไม่ถูกต้อง', 'error');
+              btn.disabled = false;
+              btn.innerHTML = 'เข้าสู่ระบบ 🔑';
+              return;
+            }
+
+            state.currentUser = { username: matched.username, friendName: matched.friendName };
+            localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+
+            btn.disabled = false;
+            btn.innerHTML = 'เข้าสู่ระบบ 🔑';
+            showToast('เข้าสู่ระบบสำเร็จ!');
+            handleLoginSuccess();
+          }, 500);
+        } else {
+          try {
+            const response = await fetch(state.apiUrl, {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (data && data.status === 'success') {
+              state.currentUser = data.user;
+              localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+              showToast('เข้าสู่ระบบสำเร็จ!');
+              handleLoginSuccess();
+            } else {
+              throw new Error(data.message || 'เข้าสู่ระบบไม่สำเร็จ');
+            }
+          } catch (err) {
+            showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = 'เข้าสู่ระบบ 🔑';
+            lucide.createIcons();
+          }
+        }
+      });
+    }
+
+    function setupRegisterFormSubmit() {
+      elements.registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const username = elements.regUsername.value.trim();
+        const password = elements.regPassword.value.trim();
+        const friendSelect = elements.regFriendSelect.value;
+
+        let friendName = friendSelect;
+        if (friendSelect === '__new__') {
+          friendName = elements.regNewFriendName.value.trim();
+        }
+
+        if (!username || !password || !friendName) {
+          showToast('กรุณากรอกข้อมูลให้ครบถ้วน', 'error');
+          return;
+        }
+
+        const payload = {
+          action: 'register',
+          username,
+          password,
+          friendName
+        };
+
+        const btn = elements.btnRegisterSubmit;
+        btn.disabled = true;
+        btn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>กำลังลงทะเบียน...</span>`;
+        lucide.createIcons();
+
+        if (state.isMockMode) {
+          setTimeout(() => {
+            const mockUsers = getMockUsers();
+            const exists = mockUsers.some(u => u.username.toLowerCase() === username.toLowerCase());
+            if (exists) {
+              showToast('ชื่อผู้ใช้งานนี้ถูกใช้ไปแล้ว', 'error');
+              btn.disabled = false;
+              btn.innerHTML = '<span>สมัครสมาชิกและเข้าใช้ ✅</span>';
+              return;
+            }
+
+            if (friendSelect === '__new__') {
+              const nameExists = state.friends.some(f => f.name === friendName);
+              if (!nameExists) {
+                state.friends.push({ name: friendName, initial: 0 });
+                localStorage.setItem('gingun_friends', JSON.stringify(state.friends));
+                renderBillSelectors();
+                renderChatSelectors();
+              }
+            }
+
+            const newUser = { username, password, friendName };
+            mockUsers.push(newUser);
+            localStorage.setItem('gingun_mock_users', JSON.stringify(mockUsers));
+
+            state.currentUser = { username, friendName };
+            localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+
+            btn.disabled = false;
+            btn.innerHTML = '<span>สมัครสมาชิกและเข้าใช้ ✅</span>';
+            showToast('ลงทะเบียนและเข้าสู่ระบบสำเร็จ!');
+            handleLoginSuccess();
+          }, 600);
+        } else {
+          try {
+            const response = await fetch(state.apiUrl, {
+              method: 'POST',
+              body: JSON.stringify(payload)
+            });
+            const data = await response.json();
+            if (data && data.status === 'success') {
+              if (friendSelect === '__new__') {
+                const nameExists = state.friends.some(f => f.name === friendName);
+                if (!nameExists) {
+                  state.friends.push({ name: friendName, initial: 0 });
+                  localStorage.setItem('gingun_friends', JSON.stringify(state.friends));
+                  renderBillSelectors();
+                  renderChatSelectors();
+                }
+              }
+
+              state.currentUser = data.user;
+              localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+              showToast('ลงทะเบียนและเข้าสู่ระบบสำเร็จ!');
+              handleLoginSuccess();
+            } else {
+              throw new Error(data.message || 'ลงทะเบียนไม่สำเร็จ');
+            }
+          } catch (err) {
+            showToast('เกิดข้อผิดพลาด: ' + err.message, 'error');
+          } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<span>สมัครสมาชิกและเข้าใช้ ✅</span>';
+            lucide.createIcons();
+          }
+        }
+      });
+    }
+
+    function setupAuthListeners() {
+      elements.linkShowRegister.addEventListener('click', (e) => {
+        e.preventDefault();
+        elements.loginForm.classList.add('hidden');
+        elements.registerForm.classList.remove('hidden');
+        populateRegisterFriendDropdown();
+      });
+
+      elements.linkShowLogin.addEventListener('click', (e) => {
+        e.preventDefault();
+        elements.registerForm.classList.add('hidden');
+        elements.loginForm.classList.remove('hidden');
+      });
+
+      elements.btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('gingun_logged_user');
+        state.currentUser = null;
+
+        elements.authOverlay.classList.remove('hidden');
+        elements.userProfileWidget.classList.add('hidden');
+
+        const roleContainer = document.getElementById('role-select-container');
+        if (roleContainer) roleContainer.classList.remove('hidden');
+
+        elements.loginUsername.value = '';
+        elements.loginPassword.value = '';
+        elements.regUsername.value = '';
+        elements.regPassword.value = '';
+        elements.regNewFriendName.value = '';
+        elements.regNewFriendName.classList.add('hidden');
+
+        showToast('ออกจากระบบเรียบร้อยแล้ว', 'info');
+      });
+
+      elements.chatAttachFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadedChatSlipName = file.name;
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          uploadedChatSlipBase64 = evt.target.result;
+          elements.chatPreviewImg.src = uploadedChatSlipBase64;
+          elements.chatPreviewContainer.classList.remove('hidden');
+        };
+        reader.readAsDataURL(file);
+      });
+
+      elements.btnChatPreviewRemove.addEventListener('click', () => {
+        uploadedChatSlipBase64 = '';
+        uploadedChatSlipName = '';
+        elements.chatPreviewContainer.classList.add('hidden');
+        elements.chatPreviewImg.src = '';
+        elements.chatAttachFile.value = '';
+      });
+
+      const defaultMockUsers = [
+        { username: 'a', password: 'a', friendName: 'นาย A' },
+        { username: 'b', password: 'b', friendName: 'นาย B' },
+        { username: 'c', password: 'c', friendName: 'นาย C' }
+      ];
+      if (!localStorage.getItem('gingun_mock_users')) {
+        localStorage.setItem('gingun_mock_users', JSON.stringify(defaultMockUsers));
+      }
+
+      setupLoginFormSubmit();
+      setupRegisterFormSubmit();
+
+      const authToggleConfig = document.getElementById('btn-auth-toggle-config');
+      if (authToggleConfig) {
+        authToggleConfig.addEventListener('click', () => {
+          elements.configPanel.classList.toggle('hidden');
+          if (!elements.configPanel.classList.contains('hidden')) {
+            elements.inputApiUrl.focus();
+          }
+        });
+      }
+    }
+
+    function init() {
+      switchTab('dashboard');
+      updateUiMode();
+      renderFriendsManager();
+      renderBillSelectors();
+      renderChatSelectors();
+      renderTransferSelectors();
+      setupTransferListeners();
+      setupAuthListeners();
+
+      if (state.currentUser) {
+        handleLoginSuccess();
+      } else {
+        elements.authOverlay.classList.remove('hidden');
+      }
+
+      lucide.createIcons();
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
