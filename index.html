@@ -209,6 +209,31 @@
           <p class="mt-2 text-[10px] text-slate-400 font-semibold">* หากต้องการสลับกลับไปใช้โหมดทดสอบจำลอง (Offline/Mock Mode) ให้ลบลิงก์ในช่องนี้ออกให้หมด แล้วกดบันทึกการเชื่อมต่อ</p>
         </div>
 
+        <div class="border-t border-slate-800/80 pt-4 space-y-4">
+          <div class="flex items-center gap-2 text-emerald-400">
+            <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M24 10.304c0-5.36-5.385-9.72-12-9.72s-12 4.36-12 9.72c0 4.8 4.27 8.847 10.035 9.585.39.083.922.258 1.057.592.12.303.08.776.04 1.082l-.17 1.022c-.05.3-.24 1.173 1.037.64 1.28-.535 6.9-4.062 9.412-6.954C22.787 14.887 24 12.756 24 10.304zm-14.77 2.923c-.06.06-.15.09-.24.09h-1.63c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v3.435h.98c.19 0 .35.16.35.35v.3c0 .09-.03.18-.09.24zm2.66-.09V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v4.405c0 .19-.16.35-.35.35h-.3c-.19 0-.35-.16-.35-.35zm4.84 0l-1.87-2.735v2.385c0 .19-.16.35-.35.35h-.3c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h.3c.12 0 .23.06.29.17l1.83 2.68V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v4.405c0 .19-.16.35-.35.35h-.3c-.12 0-.23-.06-.29-.17zm3.17-1.34h1.1c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.45c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h1.45c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.1v1.175h1.03c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.03v1.205z"/>
+            </svg>
+            <h3 class="text-xs font-bold uppercase tracking-wider">ตั้งค่าระบบ LINE</h3>
+          </div>
+          
+          <div>
+            <label for="input-line-channel-id" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Login Channel ID</label>
+            <input type="text" id="input-line-channel-id" placeholder="ใส่ Channel ID จาก LINE Developer Console" class="w-full px-4 py-3 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 text-sm font-mono transition duration-200 neumorphic-input">
+          </div>
+
+          <div>
+            <label for="input-line-channel-secret" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Login Channel Secret</label>
+            <input type="password" id="input-line-channel-secret" placeholder="ใส่ Channel Secret" class="w-full px-4 py-3 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 text-sm font-mono transition duration-200 neumorphic-input">
+          </div>
+
+          <div>
+            <label for="input-line-notify-token" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Notify Access Token</label>
+            <input type="password" id="input-line-notify-token" placeholder="ใส่ Access Token ของ LINE Notify เพื่อแจ้งเตือนในกลุ่ม" class="w-full px-4 py-3 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 text-sm font-mono transition duration-200 neumorphic-input">
+            <p class="mt-2 text-[10px] text-slate-400 font-semibold">* สร้าง Token ได้ที่ <a href="https://notify-bot.line.me/" target="_blank" class="text-emerald-400 underline hover:text-emerald-300">notify-bot.line.me</a> แล้วลากบอท LINE Notify เข้ากลุ่มเป้าหมาย</p>
+          </div>
+        </div>
+
         <div class="flex flex-wrap gap-2 pt-2">
           <button id="btn-save-config" class="px-5 py-2.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl shadow-md transition duration-200 flex items-center gap-2">
             <i data-lucide="save" class="w-4 h-4"></i>
@@ -711,6 +736,20 @@
         <button type="submit" id="btn-login-submit" class="w-full py-3.5 bg-brand-600 hover:bg-brand-500 text-white font-bold text-sm rounded-xl transition duration-200 shadow-lg shadow-brand-950/40 flex items-center justify-center gap-2">
           <span>เข้าสู่ระบบ 🔑</span>
         </button>
+
+        <div class="flex items-center my-4">
+          <hr class="flex-grow border-slate-800">
+          <span class="px-3 text-xs text-slate-500 font-semibold">หรือ</span>
+          <hr class="flex-grow border-slate-800">
+        </div>
+
+        <button type="button" id="btn-line-login" class="w-full py-3.5 bg-[#06C755] hover:bg-[#05b34c] text-white font-bold text-sm rounded-xl transition duration-200 shadow-lg shadow-emerald-950/30 flex items-center justify-center gap-2">
+          <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 10.304c0-5.36-5.385-9.72-12-9.72s-12 4.36-12 9.72c0 4.8 4.27 8.847 10.035 9.585.39.083.922.258 1.057.592.12.303.08.776.04 1.082l-.17 1.022c-.05.3-.24 1.173 1.037.64 1.28-.535 6.9-4.062 9.412-6.954C22.787 14.887 24 12.756 24 10.304zm-14.77 2.923c-.06.06-.15.09-.24.09h-1.63c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v3.435h.98c.19 0 .35.16.35.35v.3c0 .09-.03.18-.09.24zm2.66-.09V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v4.405c0 .19-.16.35-.35.35h-.3c-.19 0-.35-.16-.35-.35zm4.84 0l-1.87-2.735v2.385c0 .19-.16.35-.35.35h-.3c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h.3c.12 0 .23.06.29.17l1.83 2.68V8.532c0-.19.16-.35.35-.35h.3c.19 0 .35.16.35.35v4.405c0 .19-.16.35-.35.35h-.3c-.12 0-.23-.06-.29-.17zm3.17-1.34h1.1c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.45c-.19 0-.35-.16-.35-.35V8.532c0-.19.16-.35.35-.35h1.45c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.1v1.175h1.03c.19 0 .35.16.35.35v.3c0 .19-.16.35-.35.35h-1.03v1.205z"/>
+          </svg>
+          <span>เข้าสู่ระบบด้วย LINE</span>
+        </button>
+
         <div class="text-center text-xs text-slate-400 font-semibold mt-4">
           ยังไม่มีบัญชีกลุ่ม? <a href="#" id="link-show-register" class="text-brand-400 hover:underline">สมัครสมาชิกที่นี่</a>
         </div>
@@ -816,6 +855,9 @@
       apiUrl: storedApiUrl === 'mock' ? '' : storedApiUrl,
       isMockMode: storedApiUrl === 'mock' || storedApiUrl === '',
       currentUser: safeJsonParse('gingun_logged_user', null),
+      lineChannelId: '',
+      hasLineLogin: false,
+      hasLineNotify: false,
       friends: safeJsonParse('gingun_friends', [
         { name: 'นาย A', initial: 0 },
         { name: 'นาย B', initial: 0 },
@@ -1022,7 +1064,7 @@
       elements.inputApiUrl.focus();
     });
 
-    elements.btnSaveConfig.addEventListener('click', () => {
+    elements.btnSaveConfig.addEventListener('click', async () => {
       const url = elements.inputApiUrl.value.trim();
       if (!url) {
         localStorage.setItem('gingun_api_url', 'mock');
@@ -1035,6 +1077,39 @@
         state.isMockMode = false;
         showToast('บันทึก Web App URL และดึงข้อมูลใหม่เรียบร้อยแล้ว');
       }
+
+      if (state.apiUrl) {
+        const lineChannelId = document.getElementById('input-line-channel-id').value.trim();
+        const lineChannelSecret = document.getElementById('input-line-channel-secret').value.trim();
+        const lineNotifyToken = document.getElementById('input-line-notify-token').value.trim();
+
+        const payload = {
+          action: 'saveSettings',
+          lineChannelId: lineChannelId,
+          friends: state.friends
+        };
+        if (lineChannelSecret && lineChannelSecret !== '********') {
+          payload.lineChannelSecret = lineChannelSecret;
+        }
+        if (lineNotifyToken && lineNotifyToken !== '********') {
+          payload.lineNotifyToken = lineNotifyToken;
+        }
+
+        try {
+          const response = await fetch(state.apiUrl, {
+            method: 'POST',
+            body: JSON.stringify(payload)
+          });
+          const data = await response.json();
+          if (data && data.status === 'success') {
+            showToast('บันทึกการตั้งค่า LINE เรียบร้อยแล้ว!');
+          }
+        } catch (err) {
+          console.error(err);
+          showToast('ไม่สามารถบันทึกการตั้งค่า LINE ไปยังสคริปต์ได้', 'error');
+        }
+      }
+
       elements.configPanel.classList.add('hidden');
       updateUiMode();
       loadData();
@@ -1443,6 +1518,19 @@
             state.balances = data.balances;
             state.history = data.history;
             if (data.chat) state.chat = data.chat;
+
+            if (data.settings) {
+              state.lineChannelId = data.settings.lineChannelId || '';
+              state.hasLineLogin = !!data.settings.hasLineLogin;
+              state.hasLineNotify = !!data.settings.hasLineNotify;
+              
+              const chIdEl = document.getElementById('input-line-channel-id');
+              const chSecEl = document.getElementById('input-line-channel-secret');
+              const nTknEl = document.getElementById('input-line-notify-token');
+              if (chIdEl) chIdEl.value = data.settings.lineChannelId || '';
+              if (chSecEl) chSecEl.value = data.settings.hasLineLogin ? '********' : '';
+              if (nTknEl) nTknEl.value = data.settings.hasLineNotify ? '********' : '';
+            }
 
             renderBalances();
             renderSettlements();
@@ -2676,6 +2764,22 @@
     }
 
     function init() {
+      // Check query string for LINE login success callback
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('line_login_success') === 'true') {
+        const username = urlParams.get('username');
+        const friendName = urlParams.get('friendName');
+        
+        if (username && friendName) {
+          state.currentUser = { username, friendName };
+          localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+          
+          // Clean the query parameters from URL
+          const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+          window.history.replaceState({}, document.title, cleanUrl);
+        }
+      }
+
       switchTab('dashboard');
       updateUiMode();
       renderFriendsManager();
@@ -2687,8 +2791,35 @@
 
       if (state.currentUser) {
         handleLoginSuccess();
+        if (urlParams.get('line_login_success') === 'true') {
+          showToast(`ยินดีต้อนรับคุณ ${state.currentUser.friendName} เข้าสู่ระบบด้วย LINE!`);
+        }
       } else {
         elements.authOverlay.classList.remove('hidden');
+      }
+
+      // Add LINE login button listener
+      const btnLineLogin = document.getElementById('btn-line-login');
+      if (btnLineLogin) {
+        btnLineLogin.addEventListener('click', () => {
+          if (state.isMockMode) {
+            showToast('LINE Login ไม่สามารถใช้ในโหมดออฟไลน์ได้ กรุณาเชื่อมต่อ Google Sheets ก่อน', 'error');
+            return;
+          }
+          if (!state.hasLineLogin || !state.lineChannelId) {
+            showToast('ยังไม่ได้ตั้งค่า LINE Login ในแผงควบคุมตั้งค่า API', 'error');
+            return;
+          }
+          
+          const client_id = state.lineChannelId;
+          const redirect_uri = state.apiUrl;
+          const stateParam = window.location.href;
+          const scope = 'profile openid';
+          
+          const authorizeUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(stateParam)}&scope=${encodeURIComponent(scope)}`;
+          
+          window.location.href = authorizeUrl;
+        });
       }
 
       lucide.createIcons();
