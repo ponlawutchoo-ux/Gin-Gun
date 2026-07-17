@@ -802,9 +802,19 @@
       }
     }
 
+    // Default Google Sheets Web App URL
+    const defaultApiUrl = 'https://script.google.com/macros/s/AKfycbyieX4EZqabIuI3DiVE56OXYjOxa3Bc8RHtgwRuMD62_eR05kOaCqCTokyVOX9y2d8L/exec';
+
+    // Initialize with default API URL if not configured
+    let storedApiUrl = localStorage.getItem('gingun_api_url');
+    if (storedApiUrl === null) {
+      localStorage.setItem('gingun_api_url', defaultApiUrl);
+      storedApiUrl = defaultApiUrl;
+    }
+
     const state = {
-      apiUrl: localStorage.getItem('gingun_api_url') || '',
-      isMockMode: !localStorage.getItem('gingun_api_url'),
+      apiUrl: storedApiUrl === 'mock' ? '' : storedApiUrl,
+      isMockMode: storedApiUrl === 'mock' || storedApiUrl === '',
       currentUser: safeJsonParse('gingun_logged_user', null),
       friends: safeJsonParse('gingun_friends', [
         { name: 'นาย A', initial: 0 },
@@ -1015,7 +1025,7 @@
     elements.btnSaveConfig.addEventListener('click', () => {
       const url = elements.inputApiUrl.value.trim();
       if (!url) {
-        localStorage.removeItem('gingun_api_url');
+        localStorage.setItem('gingun_api_url', 'mock');
         state.apiUrl = '';
         state.isMockMode = true;
         showToast('ถอนการเชื่อมต่อ Google Sheets กลับคืนสู่โหมดจำลองออฟไลน์', 'info');
