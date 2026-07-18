@@ -2739,6 +2739,52 @@
               resetForm();
               showToast('ส่งหลักฐานโอนเงินแล้ว! รอยืนยัน');
             }, 800);
+          } else if (db) {
+            try {
+              let uploadedImageUrl = '';
+              if (uploadedSlipBase64) {
+                uploadedImageUrl = await uploadBase64ToFirebaseStorage(uploadedSlipBase64, payload.imageName);
+              }
+
+              const docData = {
+                timestamp: new Date(),
+                meal: payload.meal,
+                category: payload.category,
+                dueDate: '',
+                amount: payload.amount,
+                payer: payload.payer,
+                status: payload.status,
+                attachment: uploadedImageUrl,
+                participants: payload.participants
+              };
+
+              await addDoc(collection(db, 'expenses'), docData);
+              showToast('ส่งหลักฐานโอนเงินไปยัง Firebase สำเร็จ! รอยืนยัน');
+
+              // Send LINE notifications
+              let notifyMsg = `💸 [กินกัน] มีการแจ้งโอนเงินคืนค้างชำระ!\n👤 ผู้โอน: ${payload.payer}\n👤 ผู้รับ: ${payload.participants[0]}\n💰 ยอดเงิน: ${payload.amount} บาท\nℹ️ สถานะ: รอยืนยันการรับเงิน`;
+              if (uploadedImageUrl) {
+                notifyMsg += `\n📎 แนบหลักฐาน: ${uploadedImageUrl}`;
+              }
+              clientSendLineBroadcast(notifyMsg, uploadedImageUrl);
+
+              const recipientName = payload.participants[0];
+              let pushMsg = `💸 [กินกัน] มีการแจ้งโอนเงินคืนให้คุณ!\n👤 ผู้โอน: ${payload.payer}\n💰 ยอดเงิน: ${payload.amount} บาท\nℹ️ สถานะ: รอยืนยันการรับเงิน\n\nกรุณาเข้าสู่ระบบเพื่อยืนยันยอดเงินค้างชำระ`;
+              if (uploadedImageUrl) {
+                pushMsg += `\n📎 แนบหลักฐาน: ${uploadedImageUrl}`;
+              }
+              clientSendLinePush(recipientName, pushMsg, uploadedImageUrl);
+
+              resetForm();
+              loadData();
+            } catch (err) {
+              showToast('บันทึกข้อมูลไปยัง Firebase ล้มเหลว: ' + err.message, 'error');
+              console.error(err);
+            } finally {
+              btn.disabled = false;
+              btn.innerHTML = `<i data-lucide="check" class="w-4 h-4"></i><span>ส่งหลักฐานแจ้งโอนเงิน 🚀</span>`;
+              lucide.createIcons();
+            }
           } else {
             try {
               const response = await fetch(state.apiUrl, {
