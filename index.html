@@ -12,6 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Thai:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
 
     <script>
       tailwind.config = {
@@ -156,6 +157,103 @@
         color: #4ade80;
         box-shadow: 0 4px 15px rgba(34, 197, 94, 0.1);
       }
+
+      /* Light Theme Overrides */
+      body.light {
+        background-color: #f1f5f9;
+        background-image: 
+          radial-gradient(at 0% 0%, hsla(142, 70%, 85%, 0.3) 0px, transparent 50%),
+          radial-gradient(at 100% 0%, hsla(222, 47%, 90%, 0.7) 0px, transparent 50%),
+          radial-gradient(at 50% 100%, hsla(138, 60%, 85%, 0.2) 0px, transparent 50%);
+        color: #1e293b;
+      }
+      body.light .glass-card {
+        background: rgba(255, 255, 255, 0.75);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        box-shadow: 
+          0 4px 6px -1px rgba(0, 0, 0, 0.05),
+          0 2px 4px -1px rgba(0, 0, 0, 0.03),
+          inset 0 1px 1px rgba(255, 255, 255, 0.8);
+      }
+      body.light .glass-card:hover {
+        border-color: rgba(34, 197, 94, 0.35);
+        box-shadow: 
+          0 20px 25px -5px rgba(0, 0, 0, 0.05),
+          0 10px 10px -5px rgba(0, 0, 0, 0.03);
+      }
+      body.light .text-white {
+        color: #0f172a !important;
+      }
+      body.light .text-slate-400 {
+        color: #475569 !important;
+      }
+      body.light .text-slate-300 {
+        color: #334155 !important;
+      }
+      body.light .bg-slate-900 {
+        background-color: #e2e8f0 !important;
+      }
+      body.light .bg-slate-950 {
+        background-color: #ffffff !important;
+      }
+      body.light .bg-slate-900\/40 {
+        background-color: rgba(241, 245, 249, 0.5) !important;
+      }
+      body.light .bg-slate-900\/60 {
+        background-color: rgba(241, 245, 249, 0.7) !important;
+      }
+      body.light .border-slate-800 {
+        border-color: #e2e8f0 !important;
+      }
+      body.light .border-slate-700\/60 {
+        border-color: #cbd5e1 !important;
+      }
+      body.light .neumorphic-input {
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
+        box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+      }
+      body.light .neumorphic-input:focus {
+        border-color: #22c55e !important;
+        box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.2) !important;
+      }
+      body.light nav {
+        background-color: rgba(255, 255, 255, 0.95) !important;
+        border-color: #e2e8f0 !important;
+      }
+      body.light .bg-slate-800\/80 {
+        background-color: rgba(226, 232, 240, 0.8) !important;
+      }
+      body.light .text-slate-400.hover\:text-slate-200:hover {
+        color: #0f172a !important;
+      }
+      body.light .chat-bubble-other {
+        background-color: #e2e8f0 !important;
+        color: #0f172a !important;
+        border-color: #cbd5e1 !important;
+      }
+      body.light .chat-bubble-me {
+        background: linear-gradient(135deg, #22c55e 0%, #10b981 100%) !important;
+        color: #ffffff !important;
+      }
+      body.light .tab-btn:not(.tab-active) {
+        color: #475569 !important;
+      }
+      body.light .tab-btn:not(.tab-active):hover {
+        color: #0f172a !important;
+      }
+      body.light .tab-active {
+        background: rgba(34, 197, 94, 0.1) !important;
+        border-color: rgba(34, 197, 94, 0.3) !important;
+        color: #15803d !important;
+      }
+      body.light .bg-brand-950\/30 {
+        background-color: rgba(220, 252, 231, 0.4) !important;
+      }
+      body.light .bg-slate-900\/80 {
+        background-color: rgba(248, 250, 252, 0.95) !important;
+      }
     </style>
   </head>
   <body class="font-sans text-slate-200 antialiased py-6 px-4 sm:px-6 lg:px-8">
@@ -187,10 +285,15 @@
             </button>
           </div>
 
-          <button id="btn-toggle-config" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 rounded-xl transition duration-200 shadow-md">
-            <i data-lucide="settings" class="w-4 h-4 text-emerald-400"></i>
-            <span>ตั้งค่าระบบหลังบ้าน (API)</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button id="btn-toggle-theme" class="flex items-center justify-center p-2.5 bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 rounded-xl transition duration-200 shadow-md text-slate-300 hover:text-white" title="เปลี่ยนธีม มืด/สว่าง">
+              <i data-lucide="sun" id="theme-icon" class="w-4 h-4 text-amber-400"></i>
+            </button>
+            <button id="btn-toggle-config" class="flex items-center gap-2 px-4 py-2 text-xs font-bold text-slate-300 hover:text-white bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/60 rounded-xl transition duration-200 shadow-md">
+              <i data-lucide="settings" class="w-4 h-4 text-emerald-400"></i>
+              <span>ตั้งค่าระบบหลังบ้าน (API)</span>
+            </button>
+          </div>
         </div>
       </header>
 
@@ -229,25 +332,15 @@
             </div>
             
             <div>
-              <label for="input-line-channel-id" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Login Channel ID</label>
-              <input type="text" id="input-line-channel-id" placeholder="ใส่ LINE Channel ID ของคุณ" class="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/60 focus:outline-none text-sm font-mono text-white neumorphic-input">
+              <label for="input-line-liff-id" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE LIFF ID</label>
+              <input type="text" id="input-line-liff-id" value="2010744890-fZPkkNKK" placeholder="เช่น 2010744890-ZzE34gXk" class="w-full px-4 py-3 rounded-xl border border-slate-700/60 focus:outline-none focus:border-brand-500 text-sm font-mono text-white bg-slate-950 neumorphic-input">
+              <p class="mt-2 text-[10px] text-slate-400 font-semibold">* รับ LIFF ID ได้จากการสร้าง LIFF app ใน LINE Developers Console และตั้งค่า Endpoint URL ชี้มาที่เว็บนี้</p>
             </div>
 
             <div>
-              <label for="input-line-channel-secret" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Login Channel Secret</label>
-              <input type="password" id="input-line-channel-secret" placeholder="ใส่ LINE Channel Secret ของคุณ" class="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/60 focus:outline-none text-sm font-mono text-white neumorphic-input">
-            </div>
-
-            <div>
-              <label for="input-line-notify-token" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Channel Access Token</label>
-              <input type="password" id="input-line-notify-token" placeholder="ใส่ LINE Channel Access Token (Messaging API)" class="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/60 focus:outline-none text-sm font-mono text-white neumorphic-input">
-              <p class="mt-2 text-[10px] text-slate-400 font-semibold">* รับ Token ได้จาก LINE Developers Console (Messaging API Channel) ข้อความจะส่งแบบ Broadcast ไปหาผู้ใช้ทุกคนที่ติดตามไลน์บอทของคุณ</p>
-            </div>
-
-            <div>
-              <label for="input-line-callback-url" class="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">LINE Login Callback URL (Redirect URI)</label>
-              <input type="url" id="input-line-callback-url" placeholder="เช่น https://script.google.com/macros/s/.../exec" class="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-900/60 focus:outline-none text-sm font-mono text-white neumorphic-input">
-              <p class="mt-2 text-[10px] text-slate-400 font-semibold">* URL สำหรับรับสิทธิ์ Login จาก LINE (เช่น URL ของ Firebase Functions หรือ Apps Script Callback Proxy)</p>
+              <label for="input-line-notify-token" class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">LINE Channel Access Token (Locked)</label>
+              <input type="password" id="input-line-notify-token" value="aLu3cQ8JuLSCfI8BP31Pmzr7V0ni2vFrvWGi2C3Kt2IPOSJ6nDzQM6skwyTd7a9i2iUEQVs2bBBxSqF1UQVaAY1GndiNieyDfuZoKv6eWI934g7ynRBmEPW7ykVVaRcic2S0y+gGbciqloKUeZ9TfQdB04t89/1O/w1cDnyilFU=" disabled readonly class="w-full px-4 py-3 rounded-xl border border-slate-800 bg-slate-950/60 focus:outline-none text-sm font-mono text-slate-400 cursor-not-allowed opacity-60">
+              <p class="mt-2 text-[10px] text-slate-500 font-semibold">* LINE Messaging API Token ใช้ส่งข้อความแจ้งเตือนหาเพื่อนๆ</p>
             </div>
           </div>
 
@@ -941,11 +1034,7 @@
       async function clientSendLineBroadcast(message, imageUrl) {
         if (!db) return;
         try {
-          const settingsSnap = await getDoc(doc(db, 'settings', 'LINE_NOTIFY_TOKEN'));
-          if (!settingsSnap.exists()) return;
-          const token = settingsSnap.data().value;
-          if (!token) return;
-
+          const token = 'aLu3cQ8JuLSCfI8BP31Pmzr7V0ni2vFrvWGi2C3Kt2IPOSJ6nDzQM6skwyTd7a9i2iUEQVs2bBBxSqF1UQVaAY1GndiNieyDfuZoKv6eWI934g7ynRBmEPW7ykVVaRcic2S0y+gGbciqloKUeZ9TfQdB04t89/1O/w1cDnyilFU=';
           const messages = [{ type: 'text', text: message }];
           if (imageUrl) {
             messages.push({
@@ -971,11 +1060,7 @@
       async function clientSendLinePush(payer, message, imageUrl) {
         if (!db) return;
         try {
-          const settingsSnap = await getDoc(doc(db, 'settings', 'LINE_NOTIFY_TOKEN'));
-          if (!settingsSnap.exists()) return;
-          const token = settingsSnap.data().value;
-          if (!token) return;
-
+          const token = 'aLu3cQ8JuLSCfI8BP31Pmzr7V0ni2vFrvWGi2C3Kt2IPOSJ6nDzQM6skwyTd7a9i2iUEQVs2bBBxSqF1UQVaAY1GndiNieyDfuZoKv6eWI934g7ynRBmEPW7ykVVaRcic2S0y+gGbciqloKUeZ9TfQdB04t89/1O/w1cDnyilFU=';
           // Find recipient LINE UserId from users collection
           const q = query(collection(db, 'users'), where('friendName', '==', payer));
           const userSnap = await getDocs(q);
@@ -1014,7 +1099,7 @@
        const state = {
         isMockMode: isMockModeVal || (!db),
         currentUser: safeJsonParse('gingun_logged_user', null),
-        lineChannelId: '2010744890',
+        lineLiffId: localStorage.getItem('gingun_line_liff_id') || '2010744890-fZPkkNKK',
         hasLineLogin: true,
         hasLineNotify: true,
         friends: safeJsonParse('gingun_friends', [
@@ -1274,24 +1359,19 @@
         }
 
         if (!state.isMockMode && db) {
-          const lineChannelId = document.getElementById('input-line-channel-id').value.trim();
-          const lineChannelSecret = document.getElementById('input-line-channel-secret').value.trim();
-          const lineNotifyToken = document.getElementById('input-line-notify-token').value.trim();
-          const lineCallbackUrl = document.getElementById('input-line-callback-url').value.trim();
+          const lineLiffId = document.getElementById('input-line-liff-id').value.trim();
 
           try {
-            if (lineChannelId) await setDoc(doc(db, 'settings', 'LINE_CHANNEL_ID'), { value: lineChannelId });
-            if (lineChannelSecret && lineChannelSecret !== '********') await setDoc(doc(db, 'settings', 'LINE_CHANNEL_SECRET'), { value: lineChannelSecret });
-            if (lineNotifyToken && lineNotifyToken !== '********') await setDoc(doc(db, 'settings', 'LINE_NOTIFY_TOKEN'), { value: lineNotifyToken });
-            if (lineCallbackUrl) {
-              await setDoc(doc(db, 'settings', 'LINE_CALLBACK_URL'), { value: lineCallbackUrl });
-              localStorage.setItem('gingun_line_callback_url', lineCallbackUrl);
-              state.lineCallbackUrl = lineCallbackUrl;
+            if (lineLiffId) {
+              await setDoc(doc(db, 'settings', 'LINE_LIFF_ID'), { value: lineLiffId });
+              localStorage.setItem('gingun_line_liff_id', lineLiffId);
+              state.lineLiffId = lineLiffId;
+              state.hasLineLogin = true;
             }
-            showToast('บันทึกการตั้งค่า LINE ลง Firebase เรียบร้อยแล้ว!');
+            showToast('บันทึกการตั้งค่า LINE LIFF สำเร็จ!');
           } catch (err) {
             console.error(err);
-            showToast('ไม่สามารถบันทึกการตั้งค่า LINE ไปยัง Firebase ได้', 'error');
+            showToast('ไม่สามารถบันทึกการตั้งค่า LIFF ID ไปยัง Firebase ได้', 'error');
           }
         }
 
@@ -1719,10 +1799,7 @@
 
       function updateConfigLockState() {
         const inputFirebaseConfig = document.getElementById('input-firebase-config');
-        const inputLineId = document.getElementById('input-line-channel-id');
-        const inputLineSecret = document.getElementById('input-line-channel-secret');
-        const inputLineNotify = document.getElementById('input-line-notify-token');
-        const inputLineCallback = document.getElementById('input-line-callback-url');
+        const inputLineLiffId = document.getElementById('input-line-liff-id');
         
         const btnSave = document.getElementById('btn-save-config');
         const btnTest = document.getElementById('btn-test-connection');
@@ -1732,32 +1809,20 @@
 
         if (!state.isMockMode && state.isConfigLocked) {
           inputFirebaseConfig.disabled = true;
-          if (inputLineId) inputLineId.disabled = true;
-          if (inputLineSecret) inputLineSecret.disabled = true;
-          if (inputLineNotify) inputLineNotify.disabled = true;
-          if (inputLineCallback) inputLineCallback.disabled = true;
+          if (inputLineLiffId) inputLineLiffId.disabled = true;
 
           inputFirebaseConfig.classList.add('opacity-60', 'cursor-not-allowed');
-          if (inputLineId) inputLineId.classList.add('opacity-60', 'cursor-not-allowed');
-          if (inputLineSecret) inputLineSecret.classList.add('opacity-60', 'cursor-not-allowed');
-          if (inputLineNotify) inputLineNotify.classList.add('opacity-60', 'cursor-not-allowed');
-          if (inputLineCallback) inputLineCallback.classList.add('opacity-60', 'cursor-not-allowed');
+          if (inputLineLiffId) inputLineLiffId.classList.add('opacity-60', 'cursor-not-allowed');
 
           if (btnSave) btnSave.classList.add('hidden');
           if (btnTest) btnTest.classList.add('hidden');
           if (btnUnlock) btnUnlock.classList.remove('hidden');
         } else {
           inputFirebaseConfig.disabled = false;
-          if (inputLineId) inputLineId.disabled = false;
-          if (inputLineSecret) inputLineSecret.disabled = false;
-          if (inputLineNotify) inputLineNotify.disabled = false;
-          if (inputLineCallback) inputLineCallback.disabled = false;
+          if (inputLineLiffId) inputLineLiffId.disabled = false;
 
           inputFirebaseConfig.classList.remove('opacity-60', 'cursor-not-allowed');
-          if (inputLineId) inputLineId.classList.remove('opacity-60', 'cursor-not-allowed');
-          if (inputLineSecret) inputLineSecret.classList.remove('opacity-60', 'cursor-not-allowed');
-          if (inputLineNotify) inputLineNotify.classList.remove('opacity-60', 'cursor-not-allowed');
-          if (inputLineCallback) inputLineCallback.classList.remove('opacity-60', 'cursor-not-allowed');
+          if (inputLineLiffId) inputLineLiffId.classList.remove('opacity-60', 'cursor-not-allowed');
 
           if (btnSave) btnSave.classList.remove('hidden');
           if (btnTest) btnTest.classList.remove('hidden');
@@ -1824,19 +1889,12 @@
             settingsSnap.forEach(d => {
               settingsData[d.id] = d.data().value;
             });
-            if (settingsData.LINE_CHANNEL_ID) state.lineChannelId = settingsData.LINE_CHANNEL_ID;
-            state.lineCallbackUrl = settingsData.LINE_CALLBACK_URL || localStorage.getItem('gingun_line_callback_url') || '';
-            state.hasLineLogin = !!settingsData.LINE_CHANNEL_ID && !!settingsData.LINE_CHANNEL_SECRET;
-            state.hasLineNotify = !!settingsData.LINE_NOTIFY_TOKEN;
+            state.lineLiffId = settingsData.LINE_LIFF_ID || localStorage.getItem('gingun_line_liff_id') || '2010744890-fZPkkNKK';
+            state.hasLineLogin = true;
+            state.hasLineNotify = true;
             
-            const chIdEl = document.getElementById('input-line-channel-id');
-            const chSecEl = document.getElementById('input-line-channel-secret');
-            const nTknEl = document.getElementById('input-line-notify-token');
-            const cbUrlEl = document.getElementById('input-line-callback-url');
-            if (chIdEl) chIdEl.value = settingsData.LINE_CHANNEL_ID || '';
-            if (chSecEl) chSecEl.value = settingsData.LINE_CHANNEL_SECRET ? '********' : '';
-            if (nTknEl) nTknEl.value = settingsData.LINE_NOTIFY_TOKEN ? '********' : '';
-            if (cbUrlEl) cbUrlEl.value = state.lineCallbackUrl;
+            const liffIdEl = document.getElementById('input-line-liff-id');
+            if (liffIdEl) liffIdEl.value = state.lineLiffId;
 
             // Load chat messages
             const chatSnap = await getDocs(query(collection(db, 'chat'), orderBy('timestamp', 'asc'), limit(50)));
@@ -3255,6 +3313,10 @@
           localStorage.removeItem('gingun_logged_user');
           state.currentUser = null;
 
+          if (state.lineLiffId && typeof liff !== 'undefined' && liff.isLoggedIn()) {
+            liff.logout();
+          }
+
           elements.authOverlay.classList.remove('hidden');
           elements.userProfileWidget.classList.add('hidden');
 
@@ -3322,7 +3384,133 @@
         }
       }
 
+      // Theme Toggle Logic
+      const themeIcon = document.getElementById('theme-icon');
+      const btnToggleTheme = document.getElementById('btn-toggle-theme');
+      const savedTheme = localStorage.getItem('gingun_theme') || 'dark';
+      
+      if (savedTheme === 'light') {
+        document.body.classList.add('light');
+        if (themeIcon) {
+          themeIcon.setAttribute('data-lucide', 'moon');
+          themeIcon.classList.remove('text-amber-400');
+          themeIcon.classList.add('text-indigo-400');
+        }
+      }
+
+      if (btnToggleTheme) {
+        btnToggleTheme.addEventListener('click', () => {
+          document.body.classList.toggle('light');
+          const isLight = document.body.classList.contains('light');
+          localStorage.setItem('gingun_theme', isLight ? 'light' : 'dark');
+          
+          if (isLight) {
+            themeIcon.setAttribute('data-lucide', 'moon');
+            themeIcon.classList.remove('text-amber-400');
+            themeIcon.classList.add('text-indigo-400');
+          } else {
+            themeIcon.setAttribute('data-lucide', 'sun');
+            themeIcon.classList.remove('text-indigo-400');
+            themeIcon.classList.add('text-amber-400');
+          }
+          lucide.createIcons();
+        });
+      }
+
+      async function initLiff() {
+        if (!state.lineLiffId) return;
+        try {
+          await liff.init({ liffId: state.lineLiffId });
+          
+          if (liff.isLoggedIn()) {
+            const profile = await liff.getProfile();
+            const lineUserId = profile.userId;
+            const lineDisplayName = profile.displayName;
+            
+            const urlParams = new URLSearchParams(window.location.search);
+            const linkUsername = urlParams.get('link_username');
+            
+            if (linkUsername && db) {
+              try {
+                const userRef = doc(db, 'users', linkUsername.toLowerCase());
+                await updateDoc(userRef, { lineUserId: lineUserId });
+                if (state.currentUser) {
+                  state.currentUser.lineUserId = lineUserId;
+                  state.currentUser.hasLineLinked = true;
+                  localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+                }
+                showToast('เชื่อมต่อบัญชี LINE สำเร็จ!');
+                handleLoginSuccess();
+              } catch (e) {
+                console.error("Failed to link LINE account via LIFF:", e);
+                showToast('ไม่สามารถเชื่อมต่อ LINE ได้: ' + e.message, 'error');
+              }
+              const cleanUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+              window.history.replaceState({}, document.title, cleanUrl);
+            } else if (!state.currentUser && db) {
+              try {
+                const q = query(collection(db, 'users'), where('lineUserId', '==', lineUserId), limit(1));
+                const userSnap = await getDocs(q);
+                let matchedUser = null;
+                userSnap.forEach(d => {
+                  const data = d.data();
+                  matchedUser = {
+                    username: d.id,
+                    friendName: data.friendName,
+                    lineUserId: data.lineUserId,
+                    hasLineLinked: true
+                  };
+                });
+
+                if (matchedUser) {
+                  state.currentUser = matchedUser;
+                  localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+                  showToast(`เข้าสู่ระบบด้วย LINE สำเร็จ! ยินดีต้อนรับ ${matchedUser.friendName}`);
+                  handleLoginSuccess();
+                } else {
+                  const newUsername = 'line_' + lineUserId.substring(0, 8);
+                  const friendNameVal = lineDisplayName || 'ผู้ใช้ LINE';
+                  
+                  const nameExists = state.friends.some(f => f.name.toLowerCase() === friendNameVal.toLowerCase());
+                  if (!nameExists) {
+                    state.friends.push({ name: friendNameVal, initial: 0 });
+                    localStorage.setItem('gingun_friends', JSON.stringify(state.friends));
+                    renderBillSelectors();
+                    renderChatSelectors();
+                    renderTransferSelectors();
+                  }
+
+                  const userRef = doc(db, 'users', newUsername);
+                  const newUser = {
+                    username: newUsername,
+                    password: '',
+                    friendName: friendNameVal,
+                    lineUserId: lineUserId
+                  };
+                  await setDoc(userRef, newUser);
+
+                  state.currentUser = {
+                    username: newUsername,
+                    friendName: friendNameVal,
+                    lineUserId: lineUserId,
+                    hasLineLinked: true
+                  };
+                  localStorage.setItem('gingun_logged_user', JSON.stringify(state.currentUser));
+                  showToast(`ลงทะเบียนและเข้าสู่ระบบด้วย LINE สำเร็จ! ยินดีต้อนรับ ${friendNameVal}`);
+                  handleLoginSuccess();
+                }
+              } catch (e) {
+                console.error("LIFF login database check failed:", e);
+              }
+            }
+          }
+        } catch (e) {
+          console.error("LIFF initialization failed:", e);
+        }
+      }
+
       function init() {
+        initLiff();
         // Check query string for LINE login success callback
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('line_login_success') === 'true') {
@@ -3444,42 +3632,31 @@
             showToast('LINE Login ไม่สามารถใช้ในโหมดออฟไลน์ได้ กรุณาเชื่อมต่อ Firebase ก่อน', 'error');
             return;
           }
-          if (!state.hasLineLogin || !state.lineChannelId) {
-            showToast('ยังไม่ได้ตั้งค่า LINE Login ในแผงควบคุมตั้งค่า API', 'error');
+          if (!state.hasLineLogin || !state.lineLiffId) {
+            showToast('ยังไม่ได้ตั้งค่า LINE LIFF ID ในแผงควบคุมตั้งค่า API', 'error');
             return;
           }
           
-          const client_id = state.lineChannelId;
-          const redirect_uri = state.lineCallbackUrl;
-          if (!redirect_uri) {
-            showToast('ยังไม่ได้ตั้งค่า LINE Login Callback URL ในแผงควบคุมตั้งค่า', 'error');
-            return;
+          let redirectUri = window.location.href.split('?')[0];
+          if (linkUsername) {
+            redirectUri += '?link_username=' + encodeURIComponent(linkUsername);
           }
           
           const confirmMsg = linkUsername 
             ? `ระบบจะนำไปที่หน้า LINE Login เพื่อเชื่อมต่อบัญชีนี้กับ LINE\n\nต้องการไปต่อหรือไม่?`
-            : `ระบบจะนำไปที่หน้า LINE Login\n\nโปรดตรวจสอบให้แน่ใจว่าค่านี้ถูกใส่ไว้ใน Callback URL ของ LINE Developers Console ตรงกันทุกตัวอักษร:\n\n${redirect_uri}\n\nต้องการไปต่อหรือไม่?`;
+            : `ระบบจะนำไปที่หน้า LINE Login\n\nต้องการไปต่อหรือไม่?`;
           if (!confirm(confirmMsg)) {
             return;
           }
 
-          let stateUrl = window.location.href;
-          if (linkUsername) {
-            const connector = stateUrl.indexOf('?') === -1 ? '?' : '&';
-            stateUrl = stateUrl + connector + 'link_username=' + encodeURIComponent(linkUsername);
-          }
-          const scope = 'profile openid';
-          
-          const authorizeUrl = `https://access.line.me/oauth2/v2.1/authorize?response_type=code&client_id=${client_id}&redirect_uri=${encodeURIComponent(redirect_uri)}&state=${encodeURIComponent(stateUrl)}&scope=${encodeURIComponent(scope)}`;
-          
-          try {
-            if (window.top !== window.self) {
-              window.top.location.href = authorizeUrl;
+          if (typeof liff !== 'undefined') {
+            if (!liff.isLoggedIn()) {
+              liff.login({ redirectUri: redirectUri });
             } else {
-              window.location.href = authorizeUrl;
+              initLiff();
             }
-          } catch (e) {
-            window.location.href = authorizeUrl;
+          } else {
+            showToast('ไม่สามารถโหลด LINE LIFF SDK ได้ในขณะนี้', 'error');
           }
         }
 
