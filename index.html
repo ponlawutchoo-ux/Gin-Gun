@@ -1059,9 +1059,9 @@
       async function clientSendLineBroadcast(message, imageUrl) {
         if (!db) return;
         try {
-          const token = 'aLu3cQ8JuLSCfI8BP31Pmzr7V0ni2vFrvWGi2C3Kt2IPOSJ6nDzQM6skwyTd7a9i2iUEQVs2bBBxSqF1UQVaAY1GndiNieyDfuZoKv6eWI934g7ynRBmEPW7ykVVaRcic2S0y+gGbciqloKUeZ9TfQdB04t89/1O/w1cDnyilFU=';
           const messages = [{ type: 'text', text: message }];
-          if (imageUrl) {
+          // Only send image template to LINE if it's a valid remote HTTPS URL
+          if (imageUrl && !imageUrl.startsWith('data:')) {
             messages.push({
               type: 'image',
               originalContentUrl: imageUrl,
@@ -1069,13 +1069,12 @@
             });
           }
 
-          await fetch('https://api.line.me/v2/bot/message/broadcast', {
+          await fetch('/api/notify', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ messages })
+            body: JSON.stringify({ type: 'broadcast', messages })
           });
         } catch (e) {
           console.error("Error sending client LINE Broadcast:", e);
@@ -1085,7 +1084,6 @@
       async function clientSendLinePush(payer, message, imageUrl) {
         if (!db) return;
         try {
-          const token = 'aLu3cQ8JuLSCfI8BP31Pmzr7V0ni2vFrvWGi2C3Kt2IPOSJ6nDzQM6skwyTd7a9i2iUEQVs2bBBxSqF1UQVaAY1GndiNieyDfuZoKv6eWI934g7ynRBmEPW7ykVVaRcic2S0y+gGbciqloKUeZ9TfQdB04t89/1O/w1cDnyilFU=';
           // Find recipient LINE UserId from users collection
           const q = query(collection(db, 'users'), where('friendName', '==', payer));
           const userSnap = await getDocs(q);
@@ -1097,7 +1095,7 @@
           if (!userId) return;
 
           const messages = [{ type: 'text', text: message }];
-          if (imageUrl) {
+          if (imageUrl && !imageUrl.startsWith('data:')) {
             messages.push({
               type: 'image',
               originalContentUrl: imageUrl,
@@ -1105,13 +1103,13 @@
             });
           }
 
-          await fetch('https://api.line.me/v2/bot/message/push', {
+          await fetch('/api/notify', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
+              type: 'push',
               to: userId,
               messages: messages
             })
