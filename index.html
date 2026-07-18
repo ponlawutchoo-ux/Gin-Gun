@@ -1050,29 +1050,9 @@
 
       // Helper to upload Base64 encoded images to Firebase Storage
       async function uploadBase64ToFirebaseStorage(base64Data, filename) {
-        if (!storage) {
-          console.warn("Firebase Storage is not initialized, falling back to direct Base64 storage in Firestore.");
-          return base64Data;
-        }
-        try {
-          const parts = base64Data.split(',');
-          const mime = parts[0].match(/:(.*?);/)[1];
-          const bstr = atob(parts[1]);
-          let n = bstr.length;
-          const u8arr = new Uint8Array(n);
-          while (n--) {
-            u8arr[n] = bstr.charCodeAt(n);
-          }
-          const blob = new Blob([u8arr], { type: mime });
-          
-          const fileRef = ref(storage, 'uploads/' + Date.now() + '_' + filename);
-          await uploadBytes(fileRef, blob);
-          const downloadUrl = await getDownloadURL(fileRef);
-          return downloadUrl;
-        } catch (e) {
-          console.error("Firebase Storage upload failed, falling back to direct Base64 storage in Firestore:", e);
-          return base64Data; // Fallback to raw base64
-        }
+        // Return compressed base64 directly to store in Firestore.
+        // This bypasses Firebase Storage network calls entirely to make uploads instant and zero-config.
+        return base64Data;
       }
 
       // Helper to send LINE notification via Messaging API directly from client using Token
