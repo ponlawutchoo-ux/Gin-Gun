@@ -1011,6 +1011,43 @@
         console.error("Failed to initialize Firebase:", e);
       }
 
+      // Compress Base64 Image to reduce upload size and speed up uploads
+      function compressBase64Image(base64Str, maxWidth = 1000, maxHeight = 1000, quality = 0.7) {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = base64Str;
+          img.onload = () => {
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            const canvas = document.createElement('canvas');
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, width, height);
+
+            const compressedBase64 = canvas.toDataURL('image/jpeg', quality);
+            resolve(compressedBase64);
+          };
+          img.onerror = () => {
+            resolve(base64Str);
+          };
+        });
+      }
+
       // Helper to upload Base64 encoded images to Firebase Storage
       async function uploadBase64ToFirebaseStorage(base64Data, filename) {
         if (!storage) throw new Error("Firebase Storage supports are not ready.");
@@ -2673,8 +2710,10 @@
           uploadedSlipName = file.name;
 
           const reader = new FileReader();
-          reader.onload = function(evt) {
-            uploadedSlipBase64 = evt.target.result;
+          reader.onload = async function(evt) {
+            const rawBase64 = evt.target.result;
+            showToast('กำลังบีบอัดสลิปเพื่อความรวดเร็วในการส่ง...', 'info');
+            uploadedSlipBase64 = await compressBase64Image(rawBase64);
             elements.slipPreview.src = uploadedSlipBase64;
             elements.slipPreviewContainer.classList.remove('hidden');
           };
@@ -3391,8 +3430,10 @@
           uploadedChatSlipName = file.name;
 
           const reader = new FileReader();
-          reader.onload = function(evt) {
-            uploadedChatSlipBase64 = evt.target.result;
+          reader.onload = async function(evt) {
+            const rawBase64 = evt.target.result;
+            showToast('กำลังบีบอัดรูปภาพแชทเพื่อความรวดเร็วในการส่ง...', 'info');
+            uploadedChatSlipBase64 = await compressBase64Image(rawBase64);
             elements.chatPreviewImg.src = uploadedChatSlipBase64;
             elements.chatPreviewContainer.classList.remove('hidden');
           };
